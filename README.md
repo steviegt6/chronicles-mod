@@ -1,4 +1,6 @@
-# Chronicles Mod
+<img src="icon.png" alt="Mod Icon" align="right" />
+
+# Chronicles Mod ![](https://img.shields.io/badge/mod%20loader-tModLoader-1976d2?style=flat-square&labelColor=0d1117&color=brightgreen)
 
 > there are chronicles among us
 
