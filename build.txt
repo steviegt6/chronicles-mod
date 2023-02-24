@@ -1,0 +1,3 @@
+displayName = Chronicles Mod
+author = Tomat, ZENISIS, Lunin
+version = 1.0.0

@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <Import Project="..\tModLoader.targets"/>
+    <Import Project="dotnet.targets"/>
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <LangVersion>latest</LangVersion>
+        <Nullable>latest</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Remove=".gitignore"/>
+        <None Remove="COPYING"/>
+        <None Remove="README.md"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="JetBrains.Annotations" Version="2022.3.1"/>
+        <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*"/>
+    </ItemGroup>
+
+</Project>
