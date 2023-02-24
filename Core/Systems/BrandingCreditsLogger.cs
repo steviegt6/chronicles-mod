@@ -1,10 +1,8 @@
-using JetBrains.Annotations;
-using Terraria.ModLoader;
+using Chronicles.Core.ModLoader;
 
 namespace Chronicles.Core.Systems;
 
-[UsedImplicitly(ImplicitUseKindFlags.InstantiatedWithFixedConstructorSignature)]
-internal sealed class BrandingCreditsLogger : ModSystem {
+internal sealed class BrandingCreditsLogger : ChroniclesSystem {
     public override void OnModLoad() {
         base.OnModLoad();
 

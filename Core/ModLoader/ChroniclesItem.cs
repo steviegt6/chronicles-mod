@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using System.Linq;
+using JetBrains.Annotations;
 using Terraria.ModLoader;
 
 namespace Chronicles.Core.ModLoader;
@@ -8,6 +7,7 @@ namespace Chronicles.Core.ModLoader;
 ///     Base class for all <see cref="ModItem"/>s in Chronicles, featuring
 ///     robust abstractions and utilities for quickly scaffolding new items.
 /// </summary>
+[UsedImplicitly(ImplicitUseKindFlags.InstantiatedWithFixedConstructorSignature, ImplicitUseTargetFlags.WithInheritors)]
 public abstract class ChroniclesItem : ModItem,
                                        IChroniclesType<ModItem> {
     public override string Texture {

@@ -13,6 +13,9 @@
         <None Remove=".gitignore" />
         <None Remove="COPYING" />
         <None Remove="README.md" />
+        <None Remove="Chronicles.AssetGenerator\**" />
+        <EmbeddedResource Remove="Chronicles.AssetGenerator\**" />
+        <Compile Remove="Chronicles.AssetGenerator\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -21,7 +24,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Assets\Content" />
+        <ProjectReference Include="Chronicles.AssetGenerator\Chronicles.AssetGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Assets\**" />
+      <AdditionalFiles Include="Assets\**" />
     </ItemGroup>
 
 </Project>
