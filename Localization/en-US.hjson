@@ -1,0 +1,13 @@
+{
+    Mods: {
+        Chronicles: {
+            ItemName: {
+                RodOfDunes: Rod of Dunes
+            }
+            
+            ItemTooltip: {
+                RodOfDunes: ""
+            }
+        }
+    }
+}

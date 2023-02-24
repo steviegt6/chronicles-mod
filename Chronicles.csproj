@@ -21,7 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Localization" />
+      <Folder Include="Assets\Content" />
     </ItemGroup>
 
 </Project>
