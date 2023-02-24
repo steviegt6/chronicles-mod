@@ -8,6 +8,10 @@
             ItemTooltip: {
                 RodOfDunes: ""
             }
+            
+            Menu: {
+                TerrariaChronicles: "Terraria: Chronicles"
+            }
         }
     }
 }
