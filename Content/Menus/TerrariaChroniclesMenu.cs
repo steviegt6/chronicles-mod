@@ -15,6 +15,7 @@ public sealed class TerrariaChroniclesMenu : ChroniclesMenu {
 
     public override bool PreDrawLogo(SpriteBatch spriteBatch, ref Vector2 logoDrawCenter, ref float logoRotation, ref float logoScale, ref Color drawColor) {
         logoDrawCenter -= new Vector2(0, 20f);
+        drawColor = Color.White;
         base.PreDrawLogo(spriteBatch, ref logoDrawCenter, ref logoRotation, ref logoScale, ref drawColor);
         DrawVanillaLogo(spriteBatch, logoDrawCenter, drawColor);
         DrawModLogo(spriteBatch, logoDrawCenter);
