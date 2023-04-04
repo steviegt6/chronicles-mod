@@ -49,8 +49,12 @@ public readonly record struct Asset {
         var path = System.IO.Path.Combine(modName, "Assets", Path);
         path = path.Replace('\\', '/');
 
-        return $"{tabs}private static Asset<{memberType}> backing_{Name};\n"
-             + $"{tabs}public static Asset<{memberType}> {Name} => backing_{Name} ??= ModContent.Request<{memberType}>(\"{path}\", AssetRequestMode.ImmediateLoad);";
+        return $"{tabs}/// <summary>\n"
+             + $"{tabs}///     Path: {path}\n"
+             + $"{tabs}///     Type: {Type}\n"
+             + $"{tabs}/// </summary>\n"
+             + $"{tabs}public static Asset<{memberType}> {Name} => backing_{Name} ??= ModContent.Request<{memberType}>(\"{path}\", AssetRequestMode.ImmediateLoad);\n"
+             + $"{tabs}private static Asset<{memberType}> backing_{Name};";
     }
 
     private static string GetAssetPath(string path) {
