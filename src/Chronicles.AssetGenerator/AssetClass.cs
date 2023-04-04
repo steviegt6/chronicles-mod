@@ -18,6 +18,7 @@ public sealed class AssetClass {
         var tabs = new string(' ', tabSize * 4);
         var sb = new StringBuilder();
 
+        sb.AppendLine($"{tabs}[CompilerGenerated]");
         sb.AppendLine($"{tabs}public static class {Name} {{");
 
         for (var i = 0; i < Classes.Count; i++) {
