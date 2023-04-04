@@ -1,17 +1,5 @@
 {
     Mods: {
-        Chronicles: {
-            ItemName: {
-                RodOfDunes: Rod of Dunes
-            }
-            
-            ItemTooltip: {
-                RodOfDunes: ""
-            }
-            
-            Menu: {
-                TerrariaChronicles: "Terraria: Chronicles"
-            }
-        }
+        Chronicles: { }
     }
 }
