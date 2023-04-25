@@ -18,13 +18,12 @@ public class IronCrossbow : ModItem {
     public override void SetDefaults() {
         Item.DamageType = DamageClass.Ranged;
         Item.damage = 20;
-        Item.crit = 50;
+        Item.crit = 46;
         Item.knockBack = 7;
         Item.shoot = ModContent.ProjectileType<IronCrossbowProj>();
         Item.useAmmo = AmmoID.Arrow;
         Item.shootSpeed = 12f;
-        Item.width = 24;
-        Item.height = 24;
+        Item.width = Item.height = 24;
         Item.useTime = Item.useAnimation = 40;
         Item.useStyle = ItemUseStyleID.Shoot;
         Item.noMelee = true;
@@ -81,15 +80,6 @@ public class IronCrossbowProj : ModProjectile {
         Projectile.width = Projectile.height = 10;
     }
 
-    public override bool PreAI() {
-        if (Player.HeldItem.type == ParentItem && Player.active && !Player.dead) { //Active check
-            Projectile.timeLeft = 2;
-
-            return base.PreAI();
-        }
-        return false;
-    }
-
     public override void AI() {
         Player.heldProj = Projectile.whoAmI;
 
@@ -144,6 +134,9 @@ public class IronCrossbowProj : ModProjectile {
         if (Player.ItemAnimationActive && Player.ItemAnimationEndingOrEnded)
             if ((Player.GetModPlayer<CrossbowPlayer>().loaded = !Player.GetModPlayer<CrossbowPlayer>().loaded) == false)
                 Projectile.active = false;
+
+        if (Player.HeldItem.type == ParentItem && Player.active && !Player.dead) //Active check
+            Projectile.timeLeft = 2;
     }
 
     public override bool PreDraw(ref Color lightColor) {

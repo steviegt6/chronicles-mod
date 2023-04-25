@@ -20,15 +20,14 @@ public class WoodenShortbow : ModItem {
         Item.shoot = ModContent.ProjectileType<WoodenShortbowProj>();
         Item.useAmmo = AmmoID.Arrow;
         Item.shootSpeed = 10f;
-        Item.width = 24;
-        Item.height = 24;
+        Item.width = Item.height = 24;
         Item.useTime = Item.useAnimation = 30;
         Item.useStyle = ItemUseStyleID.Shoot;
         Item.channel = true;
         Item.noMelee = true;
         Item.noUseGraphic = true;
         Item.autoReuse = false;
-        Item.rare = ItemRarityID.Blue;
+        Item.rare = ItemRarityID.White;
     }
 
     public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] < 1;
@@ -101,9 +100,6 @@ public class WoodenShortbowProj : ModProjectile {
                     Projectile.frame = ++Projectile.frame % Main.projFrames[Type];
         }
 
-        if (!Player.ItemAnimationEndingOrEnded && Player.HeldItem.type == ParentItem && Player.active && !Player.dead) //Active check
-            Projectile.timeLeft = 2;
-
         var fullyCharged = Player.itemAnimation == 2;
         Projectile.rotation = Projectile.velocity.RotatedByRandom(fullyCharged ? 0.1f : 0f).ToRotation() + ((Player.direction == -1) ? MathHelper.Pi : 0);
         Projectile.Center = Player.Center + (Projectile.velocity * (24 + (quoteant * 2f)));
@@ -117,6 +113,9 @@ public class WoodenShortbowProj : ModProjectile {
 
         Player.SetCompositeArmFront(true, dynamicStr, Projectile.velocity.ToRotation() - 1.57f);
         Player.SetCompositeArmBack(true, Player.CompositeArmStretchAmount.Full, Projectile.velocity.ToRotation() - 1.57f);
+
+        if (!Player.ItemAnimationEndingOrEnded && Player.HeldItem.type == ParentItem && Player.active && !Player.dead) //Active check
+            Projectile.timeLeft = 2;
     }
 
     public override bool PreDraw(ref Color lightColor) {
