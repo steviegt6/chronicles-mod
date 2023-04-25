@@ -53,6 +53,8 @@ public class SilverRanseurProj : ModProjectile {
         Projectile.ignoreWater = true;
         Projectile.tileCollide = false;
         Projectile.extraUpdates = 1;
+        Projectile.usesLocalNPCImmunity = true;
+        Projectile.localNPCHitCooldown = -1;
     }
 
     public override void AI() {
