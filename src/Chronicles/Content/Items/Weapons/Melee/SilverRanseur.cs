@@ -86,16 +86,16 @@ public class SilverRanseurProj : ModProjectile {
     public override bool PreDraw(ref Color lightColor) {
         var texture = TextureAssets.Projectile[Type].Value;
 
-        var effects = (Projectile.direction < 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-        var rotation = Projectile.rotation + ((effects == SpriteEffects.FlipHorizontally) ? 0.785f : 2.355f);
-        var origin = (effects == SpriteEffects.FlipHorizontally) ? new Vector2(texture.Width - (Projectile.width / 2), Projectile.height / 2) : Projectile.Size / 2;
+        var effects = (Projectile.direction == -1) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+        var rotation = Projectile.rotation + ((effects == SpriteEffects.None) ? 0.785f : 2.355f);
+        var origin = (effects == SpriteEffects.FlipHorizontally) ? Projectile.Size / 2 : new Vector2(texture.Width - (Projectile.width / 2), Projectile.height / 2);
 
         Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, Projectile.GetAlpha(lightColor), rotation, origin, Projectile.scale, effects, 0);
 
         for (var i = 0; i < Projectile.oldPos.Length; i++) {
             var drawPos = Projectile.oldPos[i] - Main.screenPosition + origin + (Vector2.UnitY * Projectile.gfxOffY);
 
-            if (effects == SpriteEffects.FlipHorizontally)
+            if (effects == SpriteEffects.None)
                 drawPos.X -= texture.Width - Projectile.width;
 
             var alphaMod = Projectile.GetAlpha(lightColor) * ((float)(Projectile.oldPos.Length - i) / Projectile.oldPos.Length) * .5f;

@@ -82,12 +82,12 @@ public class WoodenStaffProj : ModProjectile {
             }
         }
 
-        Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, -.785f + Projectile.rotation + ((Player.direction == -1) ? MathHelper.Pi : 0));
+        Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, .785f + Projectile.rotation + ((Player.direction == 1) ? MathHelper.Pi : 0));
 
         Player.heldProj = Projectile.whoAmI;
         Projectile.Center = Player.Center;
         Projectile.rotation = Released ? 
-            -.785f + ((float)MathHelper.Min(1, (float)Player.itemAnimation / (Player.itemAnimationMax / 2)) * .3f) * Player.direction : 
+            .785f + ((float)MathHelper.Min(1, (float)Player.itemAnimation / (Player.itemAnimationMax / 2)) * .3f) * Player.direction : 
             (Projectile.rotation + (Player.GetAttackSpeed(DamageClass.Melee) * 0.15f) * Player.direction);
 
         if ((Player.itemAnimation > 2 || !Released) && Player.active && !Player.dead) //Active check
