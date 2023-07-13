@@ -5,8 +5,6 @@ using Terraria.ModLoader;
 namespace Chronicles.Content.Items.Weapons.Melee;
 
 public class TungstenSpear : SilverRanseur {
-    public override string Texture => "Chronicles/Assets/Items/Weapons/Melee/TungstenSpear";
-
     public override void SetDefaults() {
         Item.DamageType = DamageClass.Melee;
         Item.damage = 15;

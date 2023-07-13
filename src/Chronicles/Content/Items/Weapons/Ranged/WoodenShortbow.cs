@@ -7,12 +7,11 @@ using Terraria.GameContent;
 using System;
 using Terraria.DataStructures;
 using Terraria.Audio;
+using Chronicles.Core.ModLoader;
 
 namespace Chronicles.Content.Items.Weapons.Ranged;
 
-public class WoodenShortbow : ModItem {
-    public override string Texture => "Chronicles/Assets/Items/Weapons/Ranged/WoodenShortbow";
-
+public class WoodenShortbow : ChroniclesItem {
     public override void SetDefaults() {
         Item.DamageType = DamageClass.Ranged;
         Item.damage = 4;
@@ -38,7 +37,7 @@ public class WoodenShortbow : ModItem {
     }
 }
 
-public class WoodenShortbowProj : ModProjectile {
+public class WoodenShortbowProj : ChroniclesProjectile {
     private readonly int lingerTime = 20;
 
     private int ShotType {
@@ -53,8 +52,6 @@ public class WoodenShortbowProj : ModProjectile {
 
     protected virtual int ParentItem => ModContent.ItemType<WoodenShortbow>();
     private Player Player => Main.player[Projectile.owner];
-
-    public override string Texture => "Chronicles/Assets/Items/Weapons/Ranged/WoodenShortbowProj";
 
     public override void SetStaticDefaults() => Main.projFrames[Type] = 4;
 
@@ -131,17 +128,18 @@ public class WoodenShortbowProj : ModProjectile {
         if (!Released) {
             var quoteant = (float)Player.itemAnimation / Player.itemAnimationMax;
             var offset = (Vector2.UnitX * (26 - (quoteant * 20))).RotatedBy(Projectile.velocity.ToRotation());
+            var drawPos = Projectile.Center + new Vector2(0, Projectile.gfxOffY) - offset;
 
             var arrowTexture = TextureAssets.Projectile[ShotType].Value;
 
-            Main.EntitySpriteDraw(arrowTexture, Projectile.Center - offset - Main.screenPosition, null, Projectile.GetAlpha(lightColor) * (1f - quoteant), Projectile.velocity.ToRotation() + 1.57f, new Vector2(arrowTexture.Width / 2, arrowTexture.Height), Projectile.scale, effects);
+            Main.EntitySpriteDraw(arrowTexture, drawPos - Main.screenPosition, null, Projectile.GetAlpha(lightColor) * (1f - quoteant), Projectile.velocity.ToRotation() + 1.57f, new Vector2(arrowTexture.Width / 2, arrowTexture.Height), Projectile.scale, effects);
 
             var sparkleOn = 10;
             if (Player.itemAnimation <= sparkleOn && Player.itemAnimation > 2) {
-                var sparkle = Mod.Assets.Request<Texture2D>("Assets/Items/Weapons/Ranged/Sparkle").Value;
+                var sparkle = Mod.Assets.Request<Texture2D>("Assets/Misc/Sparkle").Value;
                 var scale = (float)Player.itemAnimation / sparkleOn;
 
-                Main.EntitySpriteDraw(sparkle, Projectile.Center - offset + (Vector2.UnitX * arrowTexture.Height).RotatedBy(Projectile.velocity.ToRotation()) - Main.screenPosition, null, Color.White with { A = 0 } * (Player.itemAnimation * (float)(255f / sparkleOn)), 0f, sparkle.Size() / 2, scale, effects);
+                Main.EntitySpriteDraw(sparkle, drawPos + (Vector2.UnitX * arrowTexture.Height).RotatedBy(Projectile.velocity.ToRotation()) - Main.screenPosition, null, Color.White with { A = 0 } * (Player.itemAnimation * (float)(255f / sparkleOn)), 0f, sparkle.Size() / 2, scale, effects);
             }
         }
         return false;

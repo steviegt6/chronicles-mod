@@ -1,3 +1,4 @@
+using Chronicles.Core.ModLoader;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -10,9 +11,7 @@ using Terraria.ModLoader;
 
 namespace Chronicles.Content.Items.Weapons.Melee;
 
-public class WoodenStaff : ModItem {
-    public override string Texture => "Chronicles/Assets/Items/Weapons/Melee/WoodenStaff";
-
+public class WoodenStaff : ChroniclesItem {
     public override void SetDefaults() {
         Item.DamageType = DamageClass.Melee;
         Item.damage = 8;
@@ -34,7 +33,7 @@ public class WoodenStaff : ModItem {
         => player.ownedProjectileCounts[Item.shoot] < 1;
 }
 
-public class WoodenStaffProj : ModProjectile {
+public class WoodenStaffProj : ChroniclesProjectile {
     private bool Released {
         get => (int)Projectile.ai[0] != 0;
         set => Projectile.ai[0] = value ? 1 : 0;
@@ -42,8 +41,6 @@ public class WoodenStaffProj : ModProjectile {
     private readonly int staffLength = 100;
 
     private Player Player => Main.player[Projectile.owner];
-
-    public override string Texture => "Chronicles/Assets/Items/Weapons/Melee/WoodenStaffProj";
 
     public override void SetStaticDefaults() {
         ProjectileID.Sets.TrailCacheLength[Type] = 4;
@@ -68,7 +65,6 @@ public class WoodenStaffProj : ModProjectile {
             if (Main.rand.NextBool(2)) {
                 for (var i = 0; i < 2; i++) {
                     var dustPos = Projectile.Center + (Vector2.UnitX * ((staffLength * .5f) * Projectile.scale)).RotatedBy(-.785f + (MathHelper.Pi * i) + Projectile.rotation);
-
                     Dust.NewDustPerfect(dustPos, DustID.WoodFurniture, Vector2.UnitY.RotatedBy(Projectile.rotation - .785f), 50, default, .7f).noGravity = true;
                 }
             }
@@ -105,10 +101,10 @@ public class WoodenStaffProj : ModProjectile {
         var texture = TextureAssets.Projectile[Type].Value;
         var origin = texture.Size() / 2;
 
-        Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, Projectile.GetAlpha(lightColor), Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
+        Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition + new Vector2(0, Projectile.gfxOffY), null, Projectile.GetAlpha(lightColor), Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
 
         for (var i = 0; i < Projectile.oldPos.Length; i++) {
-            var drawPos = Projectile.oldPos[i] - Main.screenPosition + (Vector2.UnitY * Projectile.gfxOffY);
+            var drawPos = Projectile.oldPos[i] - Main.screenPosition + new Vector2(0, Projectile.gfxOffY);
 
             var color = Projectile.GetAlpha(lightColor) * ((float)(Projectile.oldPos.Length - i) / Projectile.oldPos.Length) * .5f;
             Main.EntitySpriteDraw(texture, drawPos, null, color, Projectile.oldRot[i], origin, Projectile.scale, SpriteEffects.None, 0);

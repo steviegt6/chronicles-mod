@@ -7,8 +7,6 @@ namespace Chronicles.Content.Items.Weapons.Melee;
 public class TinMace : CopperClub {
     private bool reverseSwing;
 
-    public override string Texture => "Chronicles/Assets/Items/Weapons/Melee/TinMace";
-
     public override void SetDefaults() {
         Item.DamageType = DamageClass.Melee;
         Item.damage = 18;

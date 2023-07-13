@@ -5,8 +5,6 @@ using Terraria;
 namespace Chronicles.Content.Items.Weapons.Ranged;
 
 public class LeadCrossbow : IronCrossbow {
-    public override string Texture => "Chronicles/Assets/Items/Weapons/Ranged/LeadCrossbow";
-
     public override void SetDefaults() {
         Item.DamageType = DamageClass.Ranged;
         Item.damage = 20;
@@ -28,5 +26,4 @@ public class LeadCrossbow : IronCrossbow {
 
 public class LeadCrossbowProj : IronCrossbowProj {
     protected override int ParentItem => ModContent.ItemType<LeadCrossbow>();
-    public override string Texture => "Chronicles/Assets/Items/Weapons/Ranged/LeadCrossbowProj";
 }

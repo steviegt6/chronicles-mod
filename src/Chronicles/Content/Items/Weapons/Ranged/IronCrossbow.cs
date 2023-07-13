@@ -7,13 +7,12 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent;
 using System;
 using Terraria.Audio;
+using Chronicles.Core.ModLoader;
 
 namespace Chronicles.Content.Items.Weapons.Ranged;
 
-public class IronCrossbow : ModItem {
+public class IronCrossbow : ChroniclesItem {
     private readonly int loadTime = 75;
-
-    public override string Texture => "Chronicles/Assets/Items/Weapons/Ranged/IronCrossbow";
 
     public override void SetDefaults() {
         Item.DamageType = DamageClass.Ranged;
@@ -54,7 +53,7 @@ public class IronCrossbow : ModItem {
     public override bool CanConsumeAmmo(Item ammo, Player player) => !player.GetModPlayer<CrossbowPlayer>().loaded;
 }
 
-public class IronCrossbowProj : ModProjectile {
+public class IronCrossbowProj : ChroniclesProjectile {
     private int AIState {
         get => (int)Projectile.ai[0];
         set => Projectile.ai[0] = value;
@@ -66,8 +65,6 @@ public class IronCrossbowProj : ModProjectile {
 
     protected virtual int ParentItem => ModContent.ItemType<IronCrossbow>();
     private Player Player => Main.player[Projectile.owner];
-
-    public override string Texture => "Chronicles/Assets/Items/Weapons/Ranged/IronCrossbowProj";
 
     public override void SetStaticDefaults() => Main.projFrames[Type] = 5;
 
@@ -152,18 +149,19 @@ public class IronCrossbowProj : ModProjectile {
         if (AIState != FIRING) {
             var quoteant = (float)Player.itemAnimation / Player.itemAnimationMax;
             var offset = new Vector2(46 - (quoteant * 20), 4 * Player.direction).RotatedBy(Projectile.velocity.ToRotation());
+            var drawPos = Projectile.Center + new Vector2(0, Projectile.gfxOffY) - offset;
 
             Player.PickAmmo(Player.HeldItem, out var projType, out _, out _, out _, out _, true);
             var boltTexture = TextureAssets.Projectile[projType].Value;
 
-            Main.EntitySpriteDraw(boltTexture, Projectile.Center - offset - Main.screenPosition, null, Projectile.GetAlpha(lightColor) * (1f - quoteant), Projectile.velocity.ToRotation() + 1.57f, new Vector2(boltTexture.Width / 2, boltTexture.Height), Projectile.scale, effects);
+            Main.EntitySpriteDraw(boltTexture, drawPos - Main.screenPosition, null, Projectile.GetAlpha(lightColor) * (1f - quoteant), Projectile.velocity.ToRotation() + 1.57f, new Vector2(boltTexture.Width / 2, boltTexture.Height), Projectile.scale, effects);
 
             if (AIState == LOADED) {
-                var sparkle = Mod.Assets.Request<Texture2D>("Assets/Items/Weapons/Ranged/Sparkle").Value;
+                var sparkle = Mod.Assets.Request<Texture2D>("Assets/Misc/Sparkle").Value;
                 var num = (float)((Main.timeForVisualEffects / 30f) % 3.14);
                 var scale = Math.Max(0, num.ToRotationVector2().Y);
 
-                Main.EntitySpriteDraw(sparkle, Projectile.Center - offset + (Vector2.UnitX * boltTexture.Height).RotatedBy(Projectile.velocity.ToRotation()) - Main.screenPosition, null, Color.White with { A = 0 }, (float)num, sparkle.Size() / 2, scale, effects);
+                Main.EntitySpriteDraw(sparkle, drawPos + (Vector2.UnitX * boltTexture.Height).RotatedBy(Projectile.velocity.ToRotation()) - Main.screenPosition, null, Color.White with { A = 0 }, (float)num, sparkle.Size() / 2, scale, effects);
             }
         }
         return false;

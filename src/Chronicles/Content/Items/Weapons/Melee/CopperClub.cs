@@ -1,3 +1,4 @@
+using Chronicles.Core.ModLoader;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -8,10 +9,8 @@ using Terraria.ModLoader;
 
 namespace Chronicles.Content.Items.Weapons.Melee;
 
-public class CopperClub : ModItem {
+public class CopperClub : ChroniclesItem {
     private bool reverseSwing;
-
-    public override string Texture => "Chronicles/Assets/Items/Weapons/Melee/CopperClub";
 
     public override void SetDefaults() {
         Item.DamageType = DamageClass.Melee;
@@ -45,7 +44,7 @@ public class CopperClub : ModItem {
     }
 }
 
-public class CopperClubProj : ModProjectile {
+public class CopperClubProj : ChroniclesProjectile {
     private readonly int swingRange = 240;
     private readonly int holdoutDistance = 48;
 
@@ -108,6 +107,12 @@ public class CopperClubProj : ModProjectile {
             Projectile.timeLeft = 2;
     }
 
+    public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox) {
+        if (Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Player.Center, Projectile.Center))
+            return true;
+        return base.Colliding(projHitbox, targetHitbox);
+    }
+
     public override bool PreDraw(ref Color lightColor) {
         var texture = TextureAssets.Projectile[Type].Value;
         var effects = (Projectile.direction == -1) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
@@ -117,7 +122,7 @@ public class CopperClubProj : ModProjectile {
         Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, Projectile.GetAlpha(lightColor), rotation, origin, Projectile.scale, effects, 0);
 
         for (var i = 0; i < Projectile.oldPos.Length; i++) {
-            var drawPos = Projectile.oldPos[i] - Main.screenPosition + origin + (Vector2.UnitY * Projectile.gfxOffY);
+            var drawPos = Projectile.oldPos[i] - Main.screenPosition + origin + new Vector2(0, Projectile.gfxOffY);
 
             if (effects == SpriteEffects.None)
                 drawPos.X -= texture.Width - Projectile.width;

@@ -4,12 +4,11 @@ using Terraria.ModLoader;
 namespace Chronicles.Core.ModLoader;
 
 /// <summary>
-///     Base class for all <see cref="ModItem"/>s in Chronicles, featuring
-///     robust abstractions and utilities for quickly scaffolding new items.
+///     Base class for all <see cref="ModProjectile"/>s in Chronicles.
 /// </summary>
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedWithFixedConstructorSignature, ImplicitUseTargetFlags.WithInheritors)]
-public abstract class ChroniclesItem : ModItem,
-                                       IChroniclesType<ModItem> {
+public abstract class ChroniclesProjectile : ModProjectile,
+                                             IChroniclesType<ChroniclesProjectile> {
     public override string Texture {
         get {
             var ns = (GetType().Namespace ?? "Chronicles").Split('.')[0];
