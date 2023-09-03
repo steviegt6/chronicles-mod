@@ -123,7 +123,7 @@ public class WoodenShortbowProj : ChroniclesProjectile {
         var drawFrame = new Rectangle(0, texture.Height / Main.projFrames[Type] * Projectile.frame, texture.Width, texture.Height / Main.projFrames[Type]);
         var origin = new Vector2((effects == SpriteEffects.FlipHorizontally) ? 0 : drawFrame.Width, drawFrame.Height / 2);
 
-        Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, drawFrame, Projectile.GetAlpha(lightColor), Projectile.rotation, origin, Projectile.scale, effects);
+        Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition + new Vector2(0, Projectile.gfxOffY), drawFrame, Projectile.GetAlpha(lightColor), Projectile.rotation, origin, Projectile.scale, effects);
 
         if (!Released) {
             var quoteant = (float)Player.itemAnimation / Player.itemAnimationMax;

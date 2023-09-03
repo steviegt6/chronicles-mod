@@ -119,7 +119,7 @@ public class CopperClubProj : ChroniclesProjectile {
         var rotation = Projectile.rotation + ((effects == SpriteEffects.None) ? 0.785f : 2.355f);
         var origin = (effects == SpriteEffects.FlipHorizontally) ? Projectile.Size / 2 : new Vector2(texture.Width - (Projectile.width / 2), Projectile.height / 2);
 
-        Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, Projectile.GetAlpha(lightColor), rotation, origin, Projectile.scale, effects, 0);
+        Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition + new Vector2(0, Projectile.gfxOffY), null, Projectile.GetAlpha(lightColor), rotation, origin, Projectile.scale, effects, 0);
 
         for (var i = 0; i < Projectile.oldPos.Length; i++) {
             var drawPos = Projectile.oldPos[i] - Main.screenPosition + origin + new Vector2(0, Projectile.gfxOffY);
