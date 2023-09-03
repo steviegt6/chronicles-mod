@@ -15,9 +15,13 @@ public class Zombies : VanillaNPC {
         npc.TargetClosest(Alerted);
         var target = Main.player[npc.target];
 
-        if (Main.dayTime) {
-            if (npc.ai[0] == 0)
-                npc.ai[0] = (target.Center.X < npc.Center.X) ? 1 : -1; //Set an initial fleeing direction based on target position
+        if (Main.IsItDay()) {
+            ref var fleeDir = ref npc.ai[0];
+
+            if (fleeDir == 0)
+                fleeDir = (target.Center.X < npc.Center.X) ? 1 : -1; //Set an initial fleeing direction based on target position
+            if (npc.velocity.X == 0 && npc.collideX)
+                fleeDir = -fleeDir; //Switch directions upon hitting a stop
 
             npc.velocity.X = MathHelper.Lerp(npc.velocity.X, npc.ai[0] * 1.6f, .04f);
             npc.direction = npc.spriteDirection = (int)npc.ai[0];
@@ -32,7 +36,7 @@ public class Zombies : VanillaNPC {
             const float idle_speed = .3f;
             //Stumble around slowly and aimlessly until a player comes close
             if ((Main.rand.NextBool(250) || npc.velocity.X == 0 || Math.Abs(npc.velocity.X) > idle_speed) && Main.netMode != NetmodeID.MultiplayerClient) {
-                npc.velocity.X = Main.rand.NextFloat(-idle_speed, idle_speed);
+                npc.velocity.X = Main.rand.NextBool(3) ? Main.rand.NextFloat(-idle_speed, idle_speed) : 0;
                 npc.netUpdate = true;
             }
             if (npc.Distance(target.Center) < (16 * 18) && Collision.CanHit(npc, target)) {
@@ -47,8 +51,7 @@ public class Zombies : VanillaNPC {
         if ((Main.timeForVisualEffects % (600 + Main.rand.Next(300))) == 0)
             SoundEngine.PlaySound(SoundID.ZombieMoan, npc.Center); //Periodically moan
 
-        float throwaway = 6;
-        Collision.StepUp(ref npc.position, ref npc.velocity, npc.width, npc.height, ref throwaway, ref throwaway);
+        Collision.StepUp(ref npc.position, ref npc.velocity, npc.width, npc.height, ref npc.stepSpeed, ref npc.gfxOffY);
         return false;
     }
 }

@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.GameContent.UI;
+using Microsoft.Xna.Framework.Graphics;
+using Terraria.GameContent;
 
 namespace Chronicles.Core.ModLoader;
 
@@ -14,6 +16,9 @@ public abstract class VanillaNPC : GlobalNPC,
                                    IChroniclesType<GlobalNPC> {
     public bool Alerted { get; private set; }
 
+    /// <summary>
+    /// Simply set to whos NPC types you want to change the behaviour of
+    /// </summary>
     public abstract object NPCTypes { get; }
 
     public override bool InstancePerEntity => true;
@@ -67,6 +72,18 @@ public class VanillaNPCSystem : ModSystem {
         foreach (var type in types) {
             if (Activator.CreateInstance(type) is VanillaNPC item)
                 BEHAVIOUR_PACKS.Add(item);
-        }
-    } //Load all packs into a list, to easily find associated NPC types for external use
+        } //Load all packs into a list, to easily find associated NPC types for external use
+
+        for (var i = 0; i < NPCLoader.NPCCount; i++) {
+            if (ModContent.RequestIfExists<Texture2D>($"Chronicles/Assets/NPCs/Vanilla/NPC_{i}", out var asset))
+                TextureAssets.Npc[i] = asset;
+        } //Load custom textures for vanilla NPCs
+    }
+
+    public override void Unload() {
+        for (var i = 0; i < NPCLoader.NPCCount; i++) {
+            if (ModContent.RequestIfExists<Texture2D>("Chronicles/Assets/NPCs/Vanilla/NPC_" + i, out var _))
+                TextureAssets.Npc[i] = ModContent.Request<Texture2D>("Terraria/Images/NPC_" + i);
+        } //Unload custom textures for vanilla NPCs
+    }
 }

@@ -1,5 +1,8 @@
 namespace Chronicles.Core;
 
+/// <summary>
+/// Allows NPCs to spawn in 'packs' of themselves
+/// </summary>
 internal interface IPackNPC {
     /// <summary>
     /// Determines the total number of NPCs that will spawn in a pack.

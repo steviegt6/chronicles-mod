@@ -6,8 +6,8 @@ using Terraria.ID;
 
 namespace Chronicles.Content.NPCs.Vanilla;
 
-public class Ghosts : VanillaNPC {
-    public override object NPCTypes => new int[] { NPCID.Ghost, NPCID.Wraith };
+public class FloatyGross : VanillaNPC {
+    public override object NPCTypes => NPCID.FloatyGross;
 
     public override bool CanHitPlayer(NPC npc, Player target, ref int cooldownSlot) => false;
 
@@ -20,6 +20,7 @@ public class Ghosts : VanillaNPC {
         } //Snap to position
 
         foreach (var player in Main.player.Where(x => x.active && !x.dead && x.Hitbox.Intersects(npc.Hitbox))) {
+            player.AddBuff(BuffID.Weak, 300);
             player.AddBuff(BuffID.Suffocation, 30);
             player.lifeRegen -= npc.damage / 10; //'damage' the player dynamically based on what the NPC should normally
         }

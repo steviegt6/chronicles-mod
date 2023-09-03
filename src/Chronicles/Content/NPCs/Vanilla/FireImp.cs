@@ -16,6 +16,7 @@ public class FireImp : VanillaNPC,
     public int PackSize() => Main.rand.Next(2, 5);
 
     public override void SetDefaults(NPC npc) {
+        npc.damage = 0;
         npc.scale = Main.rand.NextFromList(scales);
         npc.Size = new Vector2((int)(npc.width * npc.scale), (int)(npc.height * npc.scale));
     }

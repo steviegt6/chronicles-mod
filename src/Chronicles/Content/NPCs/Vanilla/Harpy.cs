@@ -1,29 +1,18 @@
 using Chronicles.Core.ModLoader;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Graphics;
-using System;
+using System.Linq;
 using Terraria;
 using Terraria.Audio;
-using Terraria.GameContent;
 using Terraria.ID;
 
 namespace Chronicles.Content.NPCs.Vanilla;
 
-public class Bats : VanillaNPC {
+public class Harpy : VanillaNPC {
     private Vector2? sleepingPos;
 
     private bool IsSleeping(NPC npc) => npc.ai[0] == 1 && !Alerted;
 
-    public override object NPCTypes => new int[] { NPCID.CaveBat, NPCID.IceBat, NPCID.Lavabat, NPCID.JungleBat, NPCID.SporeBat, NPCID.GiantFlyingFox, NPCID.IlluminantBat, NPCID.GiantBat, NPCID.Hellbat };
-
-    public override void SetStaticDefaults() {
-        //Add additional frames of animation
-        Main.npcFrameCount[NPCID.IlluminantBat] = 5;
-        Main.npcFrameCount[NPCID.IceBat] = 5;
-        Main.npcFrameCount[NPCID.Lavabat] = 5;
-        Main.npcFrameCount[NPCID.GiantFlyingFox] = 5;
-    }
+    public override object NPCTypes => NPCID.Harpy;
 
     public override bool PreAI(NPC npc) {
         void scanForSleepingSpot(int dist) {
@@ -31,7 +20,7 @@ public class Bats : VanillaNPC {
 
             for (var i = origin.X - dist; i <= origin.X + dist; i++) {
                 for (var j = origin.Y - dist; j <= origin.Y + dist; j++) {
-                    if (Collision.CanHitLine(npc.position, npc.width, npc.height, new Vector2(i, j) * 16, 16, 16) && WorldGen.InWorld(i, j) && !Framing.GetTileSafely(i, j).HasTile && Framing.GetTileSafely(i, j - 1).HasTile) {
+                    if (Collision.CanHitLine(npc.position, npc.width, npc.height, new Vector2(i, j) * 16, 16, 16) && WorldGen.InWorld(i, j) && !Framing.GetTileSafely(i, j).HasTile && Framing.GetTileSafely(i, j + 1).HasTile) {
                         sleepingPos = (new Vector2(i, j) * 16) + new Vector2(8);
                     }
                 }
@@ -73,29 +62,17 @@ public class Bats : VanillaNPC {
         return false;
     }
 
-    public override void HitEffect(NPC npc, NPC.HitInfo hit) => SetAlertness(npc, true);
+    public override void HitEffect(NPC npc, NPC.HitInfo hit) {
+        SetAlertness(npc, true);
+
+        foreach (var otherNPC in Main.npc.Where(x => x.active && x.whoAmI != npc.whoAmI && x.Distance(npc.Center) < (16 * 20) && x.type == NPCID.Harpy))
+            otherNPC.GetGlobalNPC<Harpy>().SetAlertness(npc, true);
+    }
 
     public override bool CanHitPlayer(NPC npc, Player target, ref int cooldownSlot) => Alerted;
 
     public override void FindFrame(NPC npc, int frameHeight) {
-        var restingFrame = frameHeight * (Main.npcFrameCount[npc.type] - 1);
-
         if (IsSleeping(npc))
-            npc.frame.Y = restingFrame;
-        else if (npc.frame.Y == restingFrame) {
-            npc.frameCounter = 0;
-            npc.frame.Y = 0;
-        }
-    }
-
-    public override void PostDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor) {
-        if (!IsSleeping(npc) || npc.Distance(Main.LocalPlayer.Center) > (16 * 12))
-            return;
-
-        var elapsed = (int)((float)Main.timeForVisualEffects % 60);
-        var pos = npc.position + (Vector2.UnitY.RotatedBy(Math.Sin(elapsed / 15f)) * elapsed);
-        var color = Color.White * (float)(1f - (elapsed / 30f)) * .6f;
-
-        spriteBatch.DrawString(FontAssets.MouseText.Value, "z", pos - screenPos, color);
+            npc.frame.Y = frameHeight * (Main.npcFrameCount[npc.type] - 1);
     }
 }
