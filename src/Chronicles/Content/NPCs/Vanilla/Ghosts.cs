@@ -1,6 +1,5 @@
 using Chronicles.Core.ModLoader;
 using Microsoft.Xna.Framework;
-using System.Linq;
 using Terraria;
 using Terraria.ID;
 
@@ -12,16 +11,15 @@ public class Ghosts : VanillaNPC {
     public override bool CanHitPlayer(NPC npc, Player target, ref int cooldownSlot) => false;
 
     public override void PostAI(NPC npc) {
-        //Try to move into the player and suffocate them
         var target = Main.player[npc.target];
+
         if (npc.Distance(target.Center) < 30) {
             npc.Center = Vector2.Lerp(npc.Center, target.Center, .09f);
+            npc.gfxOffY = target.gfxOffY;
             npc.velocity = Vector2.Zero;
-        } //Snap to position
 
-        foreach (var player in Main.player.Where(x => x.active && !x.dead && x.Hitbox.Intersects(npc.Hitbox))) {
-            player.AddBuff(BuffID.Suffocation, 30);
-            player.lifeRegen -= npc.damage / 10; //'damage' the player dynamically based on what the NPC should normally
+            target.AddBuff(BuffID.Suffocation, 30);
+            target.Hurt(Terraria.DataStructures.PlayerDeathReason.ByNPC(npc.whoAmI), npc.damage / 3, 0, false, false, -1, false, 0, 0, 0);
         }
     }
 }

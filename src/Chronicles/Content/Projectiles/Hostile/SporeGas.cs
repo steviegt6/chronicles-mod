@@ -1,27 +1,23 @@
+using Chronicles.Core.ModLoader;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Linq;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace Chronicles.Content.Projectiles.Hostile;
 
-public class SporeGas : ModProjectile
-{
+public class SporeGas : ChroniclesProjectile {
     public ref float Counter => ref Projectile.ai[0];
     private readonly int timeLeftMax = 120;
 
-    public override string Texture => "Chronicles/Assets/Projectiles/Hostile/SporeGas";
-
     public override void SetStaticDefaults() => Main.projFrames[Projectile.type] = 5;
 
-    public override void SetDefaults()
-    {
-        Projectile.width = 30;
-        Projectile.height = 30;
+    public override void SetDefaults() {
+        Projectile.Size = new Vector2(30);
         Projectile.friendly = false;
+        Projectile.hostile = true;
         Projectile.tileCollide = false;
         Projectile.ignoreWater = true;
         Projectile.penetrate = -1;
@@ -29,8 +25,7 @@ public class SporeGas : ModProjectile
         Projectile.timeLeft = timeLeftMax;
     }
 
-    public override void AI()
-    {
+    public override void AI() {
         if (Projectile.timeLeft == timeLeftMax) {
             Projectile.scale = Main.rand.NextFloat(0.8f, 2.0f);
             Projectile.frame = Main.rand.Next(Main.projFrames[Type]);
@@ -53,8 +48,7 @@ public class SporeGas : ModProjectile
         }
     }
 
-    public override bool PreDraw(ref Color lightColor)
-    {
+    public override bool PreDraw(ref Color lightColor) {
         var texture = TextureAssets.Projectile[Projectile.type].Value;
         var frame = texture.Frame(1, Main.projFrames[Type], 0, Projectile.frame);
 
