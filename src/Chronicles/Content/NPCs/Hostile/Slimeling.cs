@@ -13,19 +13,22 @@ public class Slimeling : ChroniclesNPC {
     private bool airborne;
 
     public int SlimeType { get => (int)NPC.ai[0]; set => NPC.ai[0] = value; }
-    public const int COLOR_BLUE = NPCID.BlueSlime;
-    public const int COLOR_GREEN = NPCID.GreenSlime;
-    public const int COLOR_PURPLE = NPCID.PurpleSlime;
-    public const int COLOR_ICE = NPCID.IceSlime;
-    public const int COLOR_ILLUMANT = NPCID.IlluminantSlime;
-    public const int COLOR_SAND = NPCID.SandSlime;
+
+    public enum Colors {
+        Blue = NPCID.BlueSlime,
+        Green = NPCID.GreenSlime,
+        Purple = NPCID.PurpleSlime,
+        Ice = NPCID.IceSlime,
+        Illumant = NPCID.IlluminantSlime,
+        Sand = NPCID.SandSlime
+    }
 
     private Color SlimeColor => SlimeType switch {
-        COLOR_GREEN => Color.LightGreen,
-        COLOR_PURPLE => Color.MediumPurple,
-        COLOR_ICE => new Color(128, 244, 255),
-        COLOR_ILLUMANT => Color.Magenta,
-        COLOR_SAND => new Color(255, 242, 99),
+        (int)Colors.Green => Color.LightGreen,
+        (int)Colors.Purple => Color.MediumPurple,
+        (int)Colors.Ice => new Color(128, 244, 255),
+        (int)Colors.Illumant => Color.Magenta,
+        (int)Colors.Sand => new Color(255, 242, 99),
         _ => Color.SkyBlue
     };
 
@@ -59,8 +62,7 @@ public class Slimeling : ChroniclesNPC {
         else {
             NPC.velocity.X = MathHelper.Lerp(NPC.velocity.X, NPC.direction * 1.25f, .1f);
 
-            float throwaway = 6;
-            Collision.StepUp(ref NPC.position, ref NPC.velocity, NPC.width, NPC.height, ref throwaway, ref throwaway);
+            Collision.StepUp(ref NPC.position, ref NPC.velocity, NPC.width, NPC.height, ref NPC.stepSpeed, ref NPC.gfxOffY);
 
             if (Main.rand.NextBool(300) && Main.netMode != NetmodeID.MultiplayerClient) {
                 NPC.velocity = new Vector2(NPC.direction * Main.rand.NextFloat(3.5f, 5.0f), -Main.rand.NextFloat(2.0f, 4.0f));
