@@ -15,7 +15,7 @@ public class Slimes : VanillaNPC {
     //This is not a fine range so as to visually represent the number of slimelings that will be spawned on death
     private static readonly float[] scales = new float[] { .8f, 1f, 1.25f };
 
-    public override object NPCTypes => new int[] { NPCID.BlueSlime, NPCID.IlluminantSlime, NPCID.IceSlime, NPCID.SandSlime, NPCID.CorruptSlime };
+    public override object NPCTypes => new int[] { NPCID.BlueSlime, NPCID.IlluminantSlime, NPCID.IceSlime, NPCID.SandSlime };
 
     public override void AI(NPC npc) {
         if (!setScale) {
