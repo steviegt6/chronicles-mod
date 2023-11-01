@@ -2,4 +2,8 @@
     Mods: {
         Chronicles: { }
     }
+
+    ItemName: {
+        Katana: Tachi
+    }
 }
