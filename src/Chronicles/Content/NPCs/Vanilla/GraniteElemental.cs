@@ -11,11 +11,16 @@ namespace Chronicles.Content.NPCs.Vanilla;
 public class GraniteElemental : VanillaNPC {
     private readonly int overshoot = 20;
 
-    private const int STATE_FLY = 0;
-    private const int STATE_SLAM = 1;
-    private const int STATE_STUN = 2;
+    //private const int STATE_FLY = 0;
+    public const int STATE_SLAM = 1;
+    public const int STATE_STUN = 2;
 
     public override object NPCTypes => NPCID.GraniteFlyer;
+
+    public override void SetStaticDefaults() {
+        NPCID.Sets.TrailingMode[NPCID.GraniteFlyer] = 1;
+        NPCID.Sets.TrailCacheLength[NPCID.GraniteFlyer] = 5;
+    }
 
     public override void SetDefaults(NPC npc) => npc.noTileCollide = false;
 
@@ -95,10 +100,11 @@ public class GraniteElemental : VanillaNPC {
             return;
 
         var texture = TextureAssets.Npc[npc.type].Value;
-        var trailLength = 5;
+        var trailLength = NPCID.Sets.TrailCacheLength[NPCID.GraniteFlyer];
+
         for (var i = 0; i < trailLength; i++) {
             var color = (Color.Cyan * (npc.ai[2] / overshoot)) with { A = 0 } * (1f - (i / (float)trailLength));
-            spriteBatch.Draw(texture, npc.Center - screenPos + new Vector2(0, npc.gfxOffY - (npc.velocity.Y * i)), npc.frame, color, npc.rotation, npc.frame.Size() / 2, npc.scale, SpriteEffects.None, 0);
+            spriteBatch.Draw(texture, npc.oldPos[i] + (npc.Size / 2) - screenPos + new Vector2(0, npc.gfxOffY), npc.frame, color, npc.rotation, npc.frame.Size() / 2, npc.scale, SpriteEffects.None, 0);
         }
     }
 }
