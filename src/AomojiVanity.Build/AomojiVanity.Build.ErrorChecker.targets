@@ -1,7 +1,8 @@
-<Project>
+﻿<Project>
     
     <Target Name="DisplayErrors" BeforeTargets="Build">
         <Error Text="Invalid option '$(ImportModLoader)' for ImportModLoader; must be 'enable' or 'disable'" Condition="$(ImportModLoader) != 'enable' AND $(ImportModLoader) != 'disable'" />
+        <Error Text="Invalid option '$(CodeAssist)' for CodeAssist; must be 'enable' or 'disable'" Condition="$(CodeAssist) != 'enable' AND $(CodeAssist) != 'disable'" />
     </Target>
     
 </Project>

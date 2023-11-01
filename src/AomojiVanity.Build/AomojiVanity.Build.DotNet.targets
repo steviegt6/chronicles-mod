@@ -1,9 +1,9 @@
-<Project>
+﻿<Project>
 
     <!-- Set the correct dotnet path to use based on platform. On Windows, it's
-         dotnet.exe. On Linux, it's dotnet. Depends on what's on the PATH.
-         Normally, Windows applications would be fine with ommitting the
-         extension, but IDEs such as Rider as special. -->
+     dotnet.exe. On Linux, it's dotnet. Depends on what's on the PATH.
+     Normally, Windows applications would be fine with ommitting the
+     extension, but IDEs such as Rider as special. -->
     <PropertyGroup>
         <!-- If there ever arises a situation in which we would have to split up
              Unix logic into Linux and macOS logic, we should instead use

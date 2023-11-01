@@ -1,0 +1,9 @@
+﻿<Project>
+
+    <Import Condition="$(ImportModLoader) == 'enable'" Project="../../../tModLoader.targets"/>
+
+    <ItemGroup>
+        <PackageReference Condition="$(CodeAssist) == 'enable'" Include="tModLoader.CodeAssist" Version="0.1.*"/>
+    </ItemGroup>
+
+</Project>

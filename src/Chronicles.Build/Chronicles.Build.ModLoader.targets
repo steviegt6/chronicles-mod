@@ -1,5 +1,0 @@
-<Project>
-
-    <Import Condition="$(ImportModLoader) == 'enable'" Project="../../../tModLoader.targets" />
-
-</Project>

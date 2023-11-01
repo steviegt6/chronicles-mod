@@ -1,0 +1,12 @@
+<Project>
+
+    <PropertyGroup>
+        <ImportModLoader Condition="$(ImportModLoader) == ''">enable</ImportModLoader>
+        <CodeAssist Condition="$(CodeAssist) == ''">enable</CodeAssist>
+    </PropertyGroup>
+
+    <Import Project="AomojiVanity.Build.ModLoader.targets"/>
+    <Import Project="AomojiVanity.Build.DotNet.targets"/>
+    <Import Project="AomojiVanity.Build.ErrorChecker.targets"/>
+
+</Project>
