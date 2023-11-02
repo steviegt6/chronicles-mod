@@ -5,10 +5,11 @@ using System.Linq;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace Chronicles.Content.Projectiles.Hostile;
 
-public class SporeGas : ChroniclesProjectile {
+public class SporeGas : ModProjectile {
     public ref float Counter => ref Projectile.ai[0];
     private readonly int timeLeftMax = 120;
 

@@ -1,3 +1,4 @@
+using Chronicles.Core;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -34,5 +35,6 @@ public class TinMace : CopperClub {
 
 public class TinMaceProj : CopperClubProj {
     protected override int SwingDusts => DustID.Tin;
-    public override string Texture => "Chronicles/Assets/Items/Weapons/Melee/TinMace";
+
+    public override string Texture => Assets.Textures.Items.Weapons.Melee.TinMace_Name;
 }

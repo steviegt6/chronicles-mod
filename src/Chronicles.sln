@@ -3,17 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chronicles.AssetGenerator", "Chronicles.AssetGenerator\Chronicles.AssetGenerator.csproj", "{1A267309-1020-4B31-9DC3-01D84ACC0F4E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chronicles", "Chronicles\Chronicles.csproj", "{872017D4-F75E-4C00-8A21-1DDD8D66BC6F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chronicles.Build", "Chronicles.Build", "{4A18DD7F-C546-4272-AC98-80EC55975CBF}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AomojiVanity.Build", "AomojiVanity.Build", "{D1AA9079-64F1-411F-91FF-5D8AFF3F0B66}"
 	ProjectSection(SolutionItems) = preProject
-		Chronicles.Build\Chronicles.Build.DotNet.targets = Chronicles.Build\Chronicles.Build.DotNet.targets
-		Chronicles.Build\Chronicles.Build.targets = Chronicles.Build\Chronicles.Build.targets
-		Chronicles.Build\Chronicles.Build.ModLoader.targets = Chronicles.Build\Chronicles.Build.ModLoader.targets
-		Chronicles.Build\Chronicles.Build.ErrorChecker.targets = Chronicles.Build\Chronicles.Build.ErrorChecker.targets
+		AomojiVanity.Build\AomojiVanity.Build.DotNet.targets = AomojiVanity.Build\AomojiVanity.Build.DotNet.targets
+		AomojiVanity.Build\AomojiVanity.Build.ErrorChecker.targets = AomojiVanity.Build\AomojiVanity.Build.ErrorChecker.targets
+		AomojiVanity.Build\AomojiVanity.Build.ModLoader.targets = AomojiVanity.Build\AomojiVanity.Build.ModLoader.targets
+		AomojiVanity.Build\AomojiVanity.Build.targets = AomojiVanity.Build\AomojiVanity.Build.targets
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarknessUnbound.CodeAssist", "DarknessUnbound.CodeAssist\DarknessUnbound.CodeAssist.csproj", "{FD18B54F-25F9-412C-B1CE-9104540C12D9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,13 +24,13 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1A267309-1020-4B31-9DC3-01D84ACC0F4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1A267309-1020-4B31-9DC3-01D84ACC0F4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1A267309-1020-4B31-9DC3-01D84ACC0F4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1A267309-1020-4B31-9DC3-01D84ACC0F4E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{872017D4-F75E-4C00-8A21-1DDD8D66BC6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{872017D4-F75E-4C00-8A21-1DDD8D66BC6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{872017D4-F75E-4C00-8A21-1DDD8D66BC6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{872017D4-F75E-4C00-8A21-1DDD8D66BC6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD18B54F-25F9-412C-B1CE-9104540C12D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD18B54F-25F9-412C-B1CE-9104540C12D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD18B54F-25F9-412C-B1CE-9104540C12D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD18B54F-25F9-412C-B1CE-9104540C12D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

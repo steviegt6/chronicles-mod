@@ -12,7 +12,7 @@ using Terraria.ModLoader;
 
 namespace Chronicles.Content.Items.Weapons.Melee;
 
-public class GoldenGreatsword : ChroniclesItem {
+public class GoldenGreatsword : ModItem {
     private bool reverseSwing;
 
     public override void SetDefaults() {
@@ -47,7 +47,7 @@ public class GoldenGreatsword : ChroniclesItem {
     }
 }
 
-public class GoldenGreatswordProj : ChroniclesProjectile {
+public class GoldenGreatswordProj : ModProjectile {
     public readonly int swingRange = 300;
     public readonly int holdoutDistance = 110;
 
@@ -66,7 +66,7 @@ public class GoldenGreatswordProj : ChroniclesProjectile {
 
     public Player Player => Main.player[Projectile.owner];
 
-    public override string Texture => "Chronicles/Assets/Items/Weapons/Melee/GoldenGreatsword";
+    public override string Texture => Assets.Textures.Items.Weapons.Melee.GoldenGreatsword_Name;
 
     public override void SetStaticDefaults() {
         ProjectileID.Sets.TrailCacheLength[Type] = 4;

@@ -25,5 +25,5 @@ public class TungstenSpear : SilverRanseur {
 }
 
 public class TungstenSpearProj : SilverRanseurProj {
-    public override string Texture => "Chronicles/Assets/Items/Weapons/Melee/TungstenSpearProj";
+    public override string Texture => Assets.Textures.Items.Weapons.Melee.TungstenSpearProj_Name;
 }

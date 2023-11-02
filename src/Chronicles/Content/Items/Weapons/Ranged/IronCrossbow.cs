@@ -11,7 +11,7 @@ using Chronicles.Core.ModLoader;
 
 namespace Chronicles.Content.Items.Weapons.Ranged;
 
-public class IronCrossbow : ChroniclesItem {
+public class IronCrossbow : ModItem {
     private readonly int loadTime = 75;
 
     public override void SetDefaults() {
@@ -53,7 +53,7 @@ public class IronCrossbow : ChroniclesItem {
     public override bool CanConsumeAmmo(Item ammo, Player player) => !player.GetModPlayer<CrossbowPlayer>().loaded;
 }
 
-public class IronCrossbowProj : ChroniclesProjectile {
+public class IronCrossbowProj : ModProjectile {
     private int AIState {
         get => (int)Projectile.ai[0];
         set => Projectile.ai[0] = value;
@@ -157,7 +157,7 @@ public class IronCrossbowProj : ChroniclesProjectile {
             Main.EntitySpriteDraw(boltTexture, drawPos - Main.screenPosition, null, Projectile.GetAlpha(lightColor) * (1f - quoteant), Projectile.velocity.ToRotation() + 1.57f, new Vector2(boltTexture.Width / 2, boltTexture.Height), Projectile.scale, effects);
 
             if (AIState == LOADED) {
-                var sparkle = Mod.Assets.Request<Texture2D>("Assets/Misc/Sparkle").Value;
+                var sparkle = Assets.Textures.Misc.Sparkle.Value;
                 var num = (float)((Main.timeForVisualEffects / 30f) % 3.14);
                 var scale = Math.Max(0, num.ToRotationVector2().Y);
 

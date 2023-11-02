@@ -11,7 +11,7 @@ using Chronicles.Core.ModLoader;
 
 namespace Chronicles.Content.Items.Weapons.Ranged;
 
-public class WoodenShortbow : ChroniclesItem {
+public class WoodenShortbow : ModItem {
     public override void SetDefaults() {
         Item.DamageType = DamageClass.Ranged;
         Item.damage = 4;
@@ -37,7 +37,7 @@ public class WoodenShortbow : ChroniclesItem {
     }
 }
 
-public class WoodenShortbowProj : ChroniclesProjectile {
+public class WoodenShortbowProj : ModProjectile {
     private readonly int lingerTime = 20;
 
     private int ShotType {
@@ -136,7 +136,7 @@ public class WoodenShortbowProj : ChroniclesProjectile {
 
             var sparkleOn = 10;
             if (Player.itemAnimation <= sparkleOn && Player.itemAnimation > 2) {
-                var sparkle = Mod.Assets.Request<Texture2D>("Assets/Misc/Sparkle").Value;
+                var sparkle = Assets.Textures.Misc.Sparkle.Value;
                 var scale = (float)Player.itemAnimation / sparkleOn;
 
                 Main.EntitySpriteDraw(sparkle, drawPos + (Vector2.UnitX * arrowTexture.Height).RotatedBy(Projectile.velocity.ToRotation()) - Main.screenPosition, null, Color.White with { A = 0 } * (Player.itemAnimation * (float)(255f / sparkleOn)), 0f, sparkle.Size() / 2, scale, effects);

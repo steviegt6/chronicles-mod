@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Chronicles.Content.Items.Weapons.Melee;
 
-public class WoodenStaff : ChroniclesItem {
+public class WoodenStaff : ModItem {
     public override void SetDefaults() {
         Item.DamageType = DamageClass.Melee;
         Item.damage = 8;
@@ -33,7 +33,7 @@ public class WoodenStaff : ChroniclesItem {
         => player.ownedProjectileCounts[Item.shoot] < 1;
 }
 
-public class WoodenStaffProj : ChroniclesProjectile {
+public class WoodenStaffProj : ModProjectile {
     private bool Released {
         get => (int)Projectile.ai[0] != 0;
         set => Projectile.ai[0] = value ? 1 : 0;

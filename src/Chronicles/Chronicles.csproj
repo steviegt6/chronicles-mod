@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <Import Project="../AomojiVanity.Build/AomojiVanity.Build.targets" />
+    <Import Project="../AomojiVanity.Build/AomojiVanity.Build.targets"/>
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
@@ -9,8 +9,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="JetBrains.Annotations" Version="2022.3.1" />
-        <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />
+        <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" PrivateAssets="all"/>
+        <PackageReference Include="JetBrains.Annotations" Version="2022.3.1"/>
+
+        <Publicize Include="tModLoader"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\DarknessUnbound.CodeAssist\DarknessUnbound.CodeAssist.csproj" PrivateAssets="all" ReferenceOutputAssembly="false" OutputItemType="Analyzer" SetTargetFramework="TargetFramework=netstandard2.0"/>
     </ItemGroup>
 
 </Project>

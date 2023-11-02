@@ -12,8 +12,7 @@ using Terraria.GameContent;
 
 namespace Chronicles.Core.ModLoader;
 
-public abstract class VanillaNPC : GlobalNPC,
-                                   IChroniclesType<GlobalNPC> {
+public abstract class VanillaNPC : GlobalNPC {
     public bool Alerted { get; private set; }
 
     /// <summary>
@@ -82,7 +81,7 @@ public class VanillaNPCSystem : ModSystem {
 
     public override void Unload() {
         for (var i = 0; i < NPCLoader.NPCCount; i++) {
-            if (ModContent.RequestIfExists<Texture2D>("Chronicles/Assets/NPCs/Vanilla/NPC_" + i, out var _))
+            if (ModContent.HasAsset("Chronicles/Assets/NPCs/Vanilla/NPC_" + i))
                 TextureAssets.Npc[i] = ModContent.Request<Texture2D>("Terraria/Images/NPC_" + i);
         } //Unload custom textures for vanilla NPCs
     }

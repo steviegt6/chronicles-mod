@@ -2,6 +2,7 @@ using Chronicles.Core.ModLoader;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using Chronicles.Core;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -11,7 +12,7 @@ using Terraria.ModLoader;
 
 namespace Chronicles.Content.Items.Weapons.Melee;
 
-public class WyvernSlayer : ChroniclesItem {
+public class WyvernSlayer : ModItem {
     private bool reverseSwing;
 
     public override void SetDefaults() {
@@ -47,7 +48,7 @@ public class WyvernSlayer : ChroniclesItem {
 }
 
 public class WyvernSlayerProj : GoldenGreatswordProj {
-    public override string Texture => "Chronicles/Assets/Items/Weapons/Melee/WyvernSlayer";
+    public override string Texture => Assets.Textures.Items.Weapons.Melee.WyvernSlayer_Name;
 
     public override void AI() {
         Player.heldProj = Projectile.whoAmI;
@@ -143,7 +144,7 @@ public class WyvernSlayerProj : GoldenGreatswordProj {
     }
 }
 
-public class Fling : ChroniclesProjectile {
+public class Fling : ModProjectile {
     public int ParentIndex {
         get => (int)Projectile.ai[0];
         set => Projectile.ai[0] = value;
@@ -153,7 +154,7 @@ public class Fling : ChroniclesProjectile {
 
     public bool DealDamage { get => Projectile.ai[2] == 1; set => Projectile.ai[2] = value ? 1 : 0; }
 
-    public override string Texture => "Chronicles/Assets/Items/Weapons/Melee/WyvernSlayer";
+    public override string Texture => ChroniclesAssets.Assets.Textures.Items.Weapons.Melee.WyvernSlayer_Name;
 
     public override void SetDefaults() {
         Projectile.penetrate = -1;

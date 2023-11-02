@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Chronicles.Content.Items.Weapons.Melee;
 
-public class CopperClub : ChroniclesItem {
+public class CopperClub : ModItem {
     private bool reverseSwing;
 
     public override void SetDefaults() {
@@ -44,7 +44,7 @@ public class CopperClub : ChroniclesItem {
     }
 }
 
-public class CopperClubProj : ChroniclesProjectile {
+public class CopperClubProj : ModProjectile {
     private readonly int swingRange = 240;
     private readonly int holdoutDistance = 48;
 
@@ -61,7 +61,7 @@ public class CopperClubProj : ChroniclesProjectile {
     protected virtual int SwingDusts => DustID.Copper;
     private Player Player => Main.player[Projectile.owner];
 
-    public override string Texture => "Chronicles/Assets/Items/Weapons/Melee/CopperClub";
+    public override string Texture => Assets.Textures.Items.Weapons.Melee.CopperClub_Name;
 
     public override void SetStaticDefaults() {
         ProjectileID.Sets.TrailCacheLength[Type] = 4;

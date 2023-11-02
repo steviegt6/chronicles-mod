@@ -1,4 +1,7 @@
+using Chronicles.Common.IO;
+using Chronicles.Core;
 using JetBrains.Annotations;
+using ReLogic.Content.Sources;
 using Terraria.ModLoader;
 
 namespace Chronicles;
@@ -13,4 +16,12 @@ namespace Chronicles;
 ///     elsewhere when appropriate).
 /// </remarks>
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedWithFixedConstructorSignature)]
-public sealed class ChroniclesMod : Mod { }
+public sealed class ChroniclesMod : Mod {
+    public override IContentSource CreateDefaultContentSource() {
+        var source = new SmartContentSource(base.CreateDefaultContentSource());
+        source.AddDirectoryRedirect("Content", "Assets/Textures");
+        return source;
+
+        _ = Mods.Chronicles.ItemName.Katana;
+    }
+}

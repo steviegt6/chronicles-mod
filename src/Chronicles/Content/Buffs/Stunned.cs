@@ -1,3 +1,4 @@
+using Chronicles.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -18,7 +19,7 @@ public class StunnedGlobalNPC : GlobalNPC {
         if (!npc.HasBuff(ModContent.BuffType<Stunned>()))
             return;
 
-        var texture = Mod.Assets.Request<Texture2D>("Assets/Misc/StunStars").Value;
+        var texture = Assets.Textures.Misc.StunStars.Value;
         var numFramesY = 6;
         var frame = texture.Frame(1, numFramesY, 0, (int)(Main.timeForVisualEffects / 4f % 5), 0, -2);
         var pos = npc.Top + new Vector2(0, -20 + npc.gfxOffY) - Main.screenPosition;

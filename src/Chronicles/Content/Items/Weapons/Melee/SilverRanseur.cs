@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Chronicles.Content.Items.Weapons.Melee;
 
-public class SilverRanseur : ChroniclesItem {
+public class SilverRanseur : ModItem {
     public override void SetDefaults() {
         Item.DamageType = DamageClass.Melee;
         Item.damage = 15;
@@ -33,7 +33,7 @@ public class SilverRanseur : ChroniclesItem {
         => velocity = velocity.RotatedByRandom(.5f);
 }
 
-public class SilverRanseurProj : ChroniclesProjectile {
+public class SilverRanseurProj : ModProjectile {
     private int HalfTime => Player.itemAnimationMax / 2;
     private Player Player => Main.player[Projectile.owner];
 

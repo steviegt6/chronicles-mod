@@ -47,7 +47,7 @@ public class Katana : VanillaItem {
     public override bool AltFunctionUse(Item item, Player player) => player.GetModPlayer<KatanaPlayer>().cooldown == 0;
 }
 
-public class KatanaProj : ChroniclesProjectile {
+public class KatanaProj : ModProjectile {
     public readonly int holdoutDistance = 60;
     public const int LUNGE = 4;
 

@@ -5,8 +5,7 @@ using Terraria.ModLoader;
 
 namespace Chronicles.Core.ModLoader;
 
-public abstract class VanillaItem : GlobalItem,
-                                   IChroniclesType<GlobalItem> {
+public abstract class VanillaItem : GlobalItem {
 
     /// <summary>Simply set to whos item types you want to change the functionality of.</summary>
     public abstract object ItemTypes { get; }

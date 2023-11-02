@@ -4,10 +4,11 @@ using Chronicles.Core.ModLoader;
 using System;
 using Terraria.ID;
 using Terraria.Audio;
+using Terraria.ModLoader;
 
 namespace Chronicles.Content.Projectiles.Hostile;
 
-public class VenomSpit : ChroniclesProjectile {
+public class VenomSpit : ModProjectile {
     public override string Texture => "Terraria/Images/Projectile_444";
 
     public override void SetDefaults() {

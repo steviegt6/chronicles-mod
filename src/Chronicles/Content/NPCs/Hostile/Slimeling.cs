@@ -5,10 +5,11 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace Chronicles.Content.NPCs.Hostile;
 
-public class Slimeling : ChroniclesNPC {
+public class Slimeling : ModNPC {
     private int frame;
     private bool airborne;
 

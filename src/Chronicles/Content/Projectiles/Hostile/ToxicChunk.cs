@@ -6,10 +6,11 @@ using Terraria;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent;
+using Terraria.ModLoader;
 
 namespace Chronicles.Content.Projectiles.Hostile;
 
-public class ToxicChunk : ChroniclesProjectile {
+public class ToxicChunk : ModProjectile {
     public override string Texture => "Terraria/Images/Projectile_523";
 
     public override void SetDefaults() {

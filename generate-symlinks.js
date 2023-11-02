@@ -1,7 +1,7 @@
 const path = require("path");
 const fs = require("fs");
 
-const dirs = ["ChroniclesMod"];
+const dirs = ["Chronicles"];
 
 const sourceDirs = dirs.map((dir) => path.join(__dirname, "src", dir));
 const targetDirs = dirs.map((dir) => path.join(__dirname, "..", dir));
