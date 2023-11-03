@@ -34,8 +34,11 @@ public class SilverRanseur : ChroniclesItem {
 }
 
 public class SilverRanseurProj : ChroniclesProjectile {
-    private int HalfTime => Player.itemAnimationMax / 2;
-    private Player Player => Main.player[Projectile.owner];
+    public int Target { get => (int)Projectile.ai[0]; set => Projectile.ai[0] = value; }
+
+    public bool Charging => Player.channel && (Player.itemAnimation < (HalfTime - 1));
+    public int HalfTime => Player.itemAnimationMax / 2;
+    public Player Player => Main.player[Projectile.owner];
 
     public override void SetStaticDefaults() {
         ProjectileID.Sets.TrailCacheLength[Type] = 5;
@@ -55,15 +58,14 @@ public class SilverRanseurProj : ChroniclesProjectile {
     }
 
     public override void AI() {
-        Player.ChangeDir(Projectile.direction);
-        Projectile.rotation = Projectile.velocity.ToRotation();
+        if (Projectile.timeLeft > 2) //The projectile has just spawned in
+            Target = -1;
+        if (Charging)
+            ChargeAI();
 
-        Player.heldProj = Projectile.whoAmI;
-        Player.SetCompositeArmBack(true, Player.CompositeArmStretchAmount.Quarter, Projectile.rotation - 1.57f);
-
-        if (Player.itemAnimation <= HalfTime) {
+        if (Player.itemAnimation <= HalfTime && !Player.channel) {
             Projectile.alpha += 15;
-            Projectile.scale -= 0.025f;
+            Projectile.scale -= .025f;
         }
         else if (Player.itemAnimation > (HalfTime * 1.5f)) {
             for (var i = 0; i < 2; i++) {
@@ -72,14 +74,38 @@ public class SilverRanseurProj : ChroniclesProjectile {
                 dust.noGravity = true;
             }
         }
-
         var lungeLength = 54;
-        var desiredVel = Vector2.Normalize(Projectile.velocity) * (lungeLength * ((Player.itemAnimation < HalfTime) ? 0.5f : 1f));
-        Projectile.velocity = Vector2.Lerp(Projectile.velocity, desiredVel, 0.15f);
+        var desiredVel = Vector2.Normalize(Projectile.velocity) * (lungeLength * ((Player.itemAnimation < HalfTime) ? .5f : 1f));
+        Projectile.velocity = Vector2.Lerp(Projectile.velocity, desiredVel, .15f);
+
+        Projectile.rotation = Projectile.velocity.ToRotation();
         Projectile.Center = Player.Center + Projectile.velocity + (Player.HeldItem.ModItem.HoldoutOffset() ?? Vector2.Zero);
+
+        Player.ChangeDir(Projectile.direction);
+        Player.heldProj = Projectile.whoAmI;
+        Player.SetCompositeArmBack(true, Player.CompositeArmStretchAmount.Quarter, Projectile.rotation - 1.57f);
 
         if (Player.itemAnimation > 2 && Player.active && !Player.dead) //Active check
             Projectile.timeLeft = 2;
+    }
+
+    public void ChargeAI() {
+        bool colliding(NPC npc) => Projectile.getRect().Intersects(npc.getRect()) || Colliding(Projectile.Hitbox, npc.Hitbox) == true;
+
+        if (Target != -1 && Main.npc[Target] is NPC npc && npc.active && colliding(npc)) {
+            npc.velocity *= MathHelper.Max(1f - npc.knockBackResist, 0f);
+            Player.velocity *= .75f;
+        }
+        else {
+            if (Player.whoAmI == Main.myPlayer) {
+                Projectile.velocity = Vector2.Lerp(Projectile.velocity, Player.DirectionTo(Main.MouseWorld) * Projectile.velocity.Length(), .025f);
+                Projectile.netUpdate = true;
+            }
+            Projectile.ResetLocalNPCHitImmunity();
+            Target = -1;
+        }
+        if (Projectile.numUpdates == 0)
+            Player.itemTime = Player.itemAnimation = HalfTime - 2;
     }
 
     public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox) {
@@ -88,11 +114,15 @@ public class SilverRanseurProj : ChroniclesProjectile {
         return base.Colliding(projHitbox, targetHitbox);
     }
 
+    public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone) => Target = target.whoAmI;
+
+    public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers) => modifiers.FinalDamage *= Charging ? 2f : 1f;
+
     public override bool PreDraw(ref Color lightColor) {
         var texture = TextureAssets.Projectile[Type].Value;
 
         var effects = (Projectile.direction == -1) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-        var rotation = Projectile.rotation + ((effects == SpriteEffects.None) ? 0.785f : 2.355f);
+        var rotation = Projectile.rotation + ((effects == SpriteEffects.None) ? .785f : 2.355f);
         var origin = (effects == SpriteEffects.FlipHorizontally) ? Projectile.Size / 2 : new Vector2(texture.Width - (Projectile.width / 2), Projectile.height / 2);
 
         Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition + new Vector2(0, Projectile.gfxOffY), null, Projectile.GetAlpha(lightColor), rotation, origin, Projectile.scale, effects, 0);
@@ -110,13 +140,13 @@ public class SilverRanseurProj : ChroniclesProjectile {
         }
 
         var maxTime = HalfTime * 1.5f;
-        if (Player.itemAnimation < maxTime) {
+        if (Player.itemAnimation < maxTime && !Charging) {
             var extraTexture = TextureAssets.Extra[89].Value;
-            var scale = new Vector2(MathHelper.Max(0, (float)Player.itemAnimation / maxTime - .5f), 1) * Projectile.scale;
+            var scale = new Vector2(MathHelper.Max(0, Player.itemAnimation / maxTime - .5f), 1) * Projectile.scale;
 
-            Main.EntitySpriteDraw(extraTexture, Player.Center + (Vector2.Normalize(Projectile.velocity) * 100) - Main.screenPosition, null, Color.White with { A = 0 }, Projectile.velocity.ToRotation() + 1.57f, extraTexture.Size() / 2, scale, effects, 0);
+            Main.EntitySpriteDraw(extraTexture, Projectile.Center - Main.screenPosition + new Vector2(0, Projectile.gfxOffY), 
+                null, Color.White with { A = 0 }, Projectile.velocity.ToRotation() + 1.57f, extraTexture.Size() / 2, scale, effects, 0);
         }
-
         return false;
     }
 }
