@@ -53,9 +53,9 @@ public class WyvernSlayerProj : GoldenGreatswordProj {
         Player.heldProj = Projectile.whoAmI;
 
         var degrees = (float)(SwingCounter / Player.itemAnimationMax) * (swingRange * DirUnit);
-        var rotation = MathHelper.ToRadians(degrees - ((swingRange / 2) * DirUnit));
+        var rotation = Projectile.velocity.ToRotation() + MathHelper.ToRadians(degrees - ((swingRange / 2) * DirUnit));
 
-        Projectile.Center = Player.Center + (Vector2.Normalize(Projectile.velocity) * (float)(holdoutDistance * Projectile.scale)).RotatedBy(rotation);
+        Projectile.Center = Player.Center + (Vector2.UnitX * (float)(holdoutDistance * Projectile.scale)).RotatedBy(rotation);
         Projectile.rotation = Player.AngleTo(Projectile.Center);
 
         Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, -1.57f + Projectile.rotation);
@@ -116,9 +116,8 @@ public class WyvernSlayerProj : GoldenGreatswordProj {
             Projectile.NewProjectile(target.GetSource_OnHurt(Projectile), target.Center, Vector2.Zero, ModContent.ProjectileType<Fling>(), Projectile.damage * 2, 0, Player.whoAmI, target.whoAmI, target.rotation);
             target.velocity *= 2f;
 
-            for (var i = 0; i < 25; i++) {
+            for (var i = 0; i < 25; i++)
                 Dust.NewDustPerfect(target.Center + (Main.rand.NextVector2Unit() * Main.rand.NextFloat(10)), Main.rand.NextBool() ? DustID.Smoke : DustID.SilverFlame, (target.velocity * Main.rand.NextFloat(.25f, .5f)).RotatedByRandom(.5f), 150, default, Main.rand.NextFloat(1f, 3f)).noGravity = true;
-            }
         }
     }
 
@@ -137,7 +136,7 @@ public class WyvernSlayerProj : GoldenGreatswordProj {
             var color = Projectile.GetAlpha(Color.LightSteelBlue with { A = 0 }) * opacity * motionUnit;
             opacity -= .3f;
 
-            Main.EntitySpriteDraw(texture, Player.Center - Main.screenPosition, frame,
+            Main.EntitySpriteDraw(texture, Player.Center - Main.screenPosition + new Vector2(0, Projectile.gfxOffY), frame,
                 color, rotation, frame.Size() / 2, 1.6f, effects, 0);
         }
     }

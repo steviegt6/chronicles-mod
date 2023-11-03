@@ -39,7 +39,7 @@ public class SilverRanseurProj : ChroniclesProjectile {
 
     public override void SetStaticDefaults() {
         ProjectileID.Sets.TrailCacheLength[Type] = 5;
-        ProjectileID.Sets.TrailingMode[Type] = 0;
+        ProjectileID.Sets.TrailingMode[Type] = 4;
     }
 
     public override void SetDefaults() {

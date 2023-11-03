@@ -217,7 +217,7 @@ public class KatanaProj : ChroniclesProjectile {
 
         var sparkle = TextureAssets.Projectile[79].Value;
         Main.EntitySpriteDraw(sparkle, drawpos + (Vector2.Normalize(Projectile.velocity) * 70f),
-            null, (Color.White with { A = 0 }) * .2f, 0, sparkle.Size() / 2, motionUnit * 2f, SpriteEffects.None, 0);
+            null, Projectile.GetAlpha((Color.White with { A = 0 }) * .2f), 0, sparkle.Size() / 2, motionUnit * 2f, SpriteEffects.None, 0);
     }
 }
 

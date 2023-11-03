@@ -53,10 +53,7 @@ public class CopperClubProj : ChroniclesProjectile {
         set => Projectile.ai[0] = value;
     }
 
-    private float SwingCounter {
-        get => Projectile.ai[1];
-        set => Projectile.ai[1] = value;
-    }
+    private ref float SwingCounter => ref Projectile.ai[1];
 
     protected virtual int SwingDusts => DustID.Copper;
     private Player Player => Main.player[Projectile.owner];
@@ -65,7 +62,7 @@ public class CopperClubProj : ChroniclesProjectile {
 
     public override void SetStaticDefaults() {
         ProjectileID.Sets.TrailCacheLength[Type] = 4;
-        ProjectileID.Sets.TrailingMode[Type] = 2;
+        ProjectileID.Sets.TrailingMode[Type] = 4;
     }
 
     public override void SetDefaults() {
@@ -87,16 +84,16 @@ public class CopperClubProj : ChroniclesProjectile {
         var startBias = 10;
         var rotation = Projectile.velocity.ToRotation() + MathHelper.ToRadians(degrees - (((swingRange / 2) + startBias) * DirUnit));
 
-        Projectile.Center = Player.Center - Projectile.velocity + (Vector2.UnitX * (float)(holdoutDistance * Projectile.scale)).RotatedBy(rotation);
+        Projectile.Center = Player.Center + (Vector2.UnitX * (float)(holdoutDistance * Projectile.scale)).RotatedBy(rotation);
         Projectile.rotation = Player.AngleTo(Projectile.Center);
 
         Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, -1.57f + Projectile.rotation);
         Player.SetCompositeArmBack(true, Player.CompositeArmStretchAmount.Full, -1.57f + Projectile.rotation);
 
-        SwingCounter = MathHelper.Lerp(SwingCounter, Player.itemAnimationMax, 0.07f);
+        SwingCounter = MathHelper.Lerp(SwingCounter, Player.itemAnimationMax, Player.GetTotalAttackSpeed(DamageClass.Melee) / 14f);
 
         if (SwingCounter >= (Player.itemAnimationMax - 2))
-            Projectile.scale -= 0.003f;
+            Projectile.scale -= .003f;
         else {
             var dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, SwingDusts, 0f, 0f, 100, default, .7f);
             dust.velocity = Vector2.UnitY.RotatedBy(Projectile.rotation);
@@ -107,6 +104,8 @@ public class CopperClubProj : ChroniclesProjectile {
             Projectile.timeLeft = 2;
     }
 
+    public override bool ShouldUpdatePosition() => false;
+
     public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox) {
         if (Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Player.Center, Projectile.Center))
             return true;
@@ -116,7 +115,7 @@ public class CopperClubProj : ChroniclesProjectile {
     public override bool PreDraw(ref Color lightColor) {
         var texture = TextureAssets.Projectile[Type].Value;
         var effects = (Projectile.direction == -1) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-        var rotation = Projectile.rotation + ((effects == SpriteEffects.None) ? 0.785f : 2.355f);
+        var rotation = Projectile.rotation + ((effects == SpriteEffects.None) ? .785f : 2.355f);
         var origin = (effects == SpriteEffects.FlipHorizontally) ? Projectile.Size / 2 : new Vector2(texture.Width - (Projectile.width / 2), Projectile.height / 2);
 
         Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition + new Vector2(0, Projectile.gfxOffY), null, Projectile.GetAlpha(lightColor), rotation, origin, Projectile.scale, effects, 0);

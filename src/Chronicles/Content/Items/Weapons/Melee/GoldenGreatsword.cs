@@ -219,7 +219,8 @@ public class GoldenGreatswordProj : ChroniclesProjectile {
             var color = Projectile.GetAlpha(Color.Goldenrod with { A = 0 }) * opacity * motionUnit;
             opacity -= .3f;
 
-            Main.EntitySpriteDraw(texture, Player.Center - Main.screenPosition, frame, color, rotation, frame.Size() / 2, 1.6f, effects, 0);
+            Main.EntitySpriteDraw(texture, Player.Center - Main.screenPosition + new Vector2(0, Projectile.gfxOffY), 
+                frame, color, rotation, frame.Size() / 2, 1.6f, effects, 0);
         }
     }
 
@@ -228,6 +229,7 @@ public class GoldenGreatswordProj : ChroniclesProjectile {
         var scalar = MathHelper.Max((10f - Math.Abs(MaxCharge - Charge)) * .5f, 0);
         var pos = Projectile.Center + (Player.DirectionTo(Projectile.Center) * 20f);
 
-        Main.EntitySpriteDraw(texture, pos - Main.screenPosition, null, Color.White with { A = 0 }, 0, texture.Size() / 2, scalar * .1f, SpriteEffects.None, 0);
+        Main.EntitySpriteDraw(texture, pos - Main.screenPosition + new Vector2(0, Projectile.gfxOffY), null, 
+            Projectile.GetAlpha(Color.White with { A = 0 }), 0, texture.Size() / 2, scalar * .1f, SpriteEffects.None, 0);
     }
 }

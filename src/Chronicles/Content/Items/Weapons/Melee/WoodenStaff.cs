@@ -44,7 +44,7 @@ public class WoodenStaffProj : ChroniclesProjectile {
 
     public override void SetStaticDefaults() {
         ProjectileID.Sets.TrailCacheLength[Type] = 4;
-        ProjectileID.Sets.TrailingMode[Type] = 2;
+        ProjectileID.Sets.TrailingMode[Type] = 4;
     }
 
     public override void SetDefaults() {
@@ -84,11 +84,13 @@ public class WoodenStaffProj : ChroniclesProjectile {
         Projectile.Center = Player.Center;
         Projectile.rotation = Released ? 
             .785f + ((float)MathHelper.Min(1, (float)Player.itemAnimation / (Player.itemAnimationMax / 2)) * .3f) * Player.direction : 
-            (Projectile.rotation + (Player.GetAttackSpeed(DamageClass.Melee) * 0.15f) * Player.direction);
+            (Projectile.rotation + (Player.GetAttackSpeed(DamageClass.Melee) * .15f) * Player.direction);
 
         if ((Player.itemAnimation > 2 || !Released) && Player.active && !Player.dead) //Active check
             Projectile.timeLeft = 2;
     }
+
+    public override bool ShouldUpdatePosition() => false;
 
     public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox) {
         var rotationUnit = -.785f + Projectile.rotation;

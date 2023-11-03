@@ -34,30 +34,35 @@ public class MolotovProj : ModProjectile {
     public override string Texture => "Terraria/Images/Projectile_399";
 
     public override void SetDefaults() {
-        Projectile.Size = new Vector2(10);
+        Projectile.Size = new Vector2(14);
         Projectile.friendly = true;
         Projectile.DamageType = DamageClass.Ranged;
+        Projectile.tileCollide = false;
     }
 
     public override void AI() {
         if (++Counter >= MaxCounter) {
             Projectile.Kill();
         } //Explode
-        if (Counter > (MaxCounter - 18)) {
+        if (Counter > (MaxCounter - 18))
             SoundEngine.PlaySound(SoundID.Item76, Projectile.Center);
-            for (var i = 0; i < 5; i++)
-                Dust.NewDustPerfect(Projectile.Center, DustID.Torch, (Vector2.UnitX * Main.rand.NextFloat(2f, 5f)).RotatedBy(Projectile.rotation + Main.rand.NextFloat()), 0, default, Main.rand.NextFloat(.4f, .75f));
+        for (var i = 0; i < 3; i++) {
+            var pos = Projectile.Center - (Vector2.UnitY * Projectile.width / 2).RotatedBy(Projectile.rotation);
+            Dust.NewDustPerfect(pos, Main.rand.NextBool() ? DustID.Torch : DustID.SolarFlare, Main.rand.NextVector2Unit() * Main.rand.NextFloat(), 0, default, Main.rand.NextFloat(.4f, 1.5f) * (Counter / MaxCounter)).noGravity = true;
         }
 
         if (!released) {
-            if (!Player.channel)
+            if (!Player.channel) {
                 released = true;
+                Projectile.tileCollide = true;
+            }
             if (Player.whoAmI == Main.myPlayer) {
                 Projectile.velocity = (Vector2.UnitX * Projectile.velocity.Length()).RotatedBy(Player.AngleTo(Main.MouseWorld));
                 Projectile.netUpdate = true;
             }
             Player.ChangeDir(Math.Sign(Projectile.velocity.X));
 
+            Projectile.rotation = Projectile.velocity.ToRotation() + ((Projectile.direction == -1) ? MathHelper.Pi : 0);
             Projectile.Center = Player.Center + (Vector2.Normalize(Projectile.velocity) * 10);
             Player.heldProj = Projectile.whoAmI;
             Player.itemAnimation = Player.itemTime = Player.itemTimeMax;
@@ -80,9 +85,9 @@ public class MolotovProj : ModProjectile {
     public override void OnKill(int timeLeft) {
         SoundEngine.PlaySound(SoundID.Item50 with { Pitch = .5f }, Projectile.Center);
         SoundEngine.PlaySound(SoundID.Item20, Projectile.Center);
+        SoundEngine.PlaySound(SoundID.Item76, Projectile.Center);
 
         for (var i = 0; i < 40; i++) {
-            Dust.NewDustPerfect(Projectile.Center, DustID.Torch, Main.rand.NextVector2Unit() * Main.rand.NextFloat(4f), 0, default, Main.rand.NextFloat(3f));
             if (i < 6) {
                 var type = (i / 2) switch {
                     1 => ProjectileID.MolotovFire2,
@@ -93,6 +98,7 @@ public class MolotovProj : ModProjectile {
                 fire.hostile = true;
                 fire.netUpdate = true;
             }
+            Dust.NewDustPerfect(Projectile.Center, DustID.Torch, Main.rand.NextVector2Unit() * Main.rand.NextFloat(4f), 0, default, Main.rand.NextFloat(3f));
         }
         Projectile.hostile = true;
         var center = Projectile.Center;

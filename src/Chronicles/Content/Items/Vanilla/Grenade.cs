@@ -24,6 +24,7 @@ public class Grenade : VanillaItem {
 }
 
 public class GrenadeProj : ModProjectile {
+    private readonly int explosionSize = 100;
     public bool released = false;
 
     public ref float Counter => ref Projectile.ai[0];
@@ -42,14 +43,10 @@ public class GrenadeProj : ModProjectile {
     }
 
     public override void AI() {
-        if (++Counter >= MaxCounter) {
+        if (++Counter >= MaxCounter)
             Projectile.Kill();
-        } //Explode
-        if (Counter > (MaxCounter - 12)) {
-            Projectile.velocity *= .95f;
-            for (var i = 0; i < 5; i++)
-                Dust.NewDustPerfect(Projectile.Center, DustID.Torch, (Vector2.UnitX * Main.rand.NextFloat(2f, 5f)).RotatedBy(Projectile.rotation + Main.rand.NextFloat()), 0, default, .5f);
-        }
+        if (Counter > (MaxCounter - 12))
+            Projectile.velocity *= .92f;
 
         if (!released) {
             if (!Player.channel)
@@ -60,6 +57,7 @@ public class GrenadeProj : ModProjectile {
             }
             Player.ChangeDir(Math.Sign(Projectile.velocity.X));
 
+            Projectile.rotation = Projectile.velocity.ToRotation() + ((Projectile.direction == -1) ? MathHelper.Pi : 0);
             Projectile.Center = Player.Center + (Vector2.Normalize(Projectile.velocity) * 10);
             Player.heldProj = Projectile.whoAmI;
             Player.itemAnimation = Player.itemTime = Player.itemTimeMax;
@@ -82,16 +80,26 @@ public class GrenadeProj : ModProjectile {
 
         for (var i = 0; i < 50; i++) {
             Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.Smoke, 0, 0, 200, default, Main.rand.NextFloat(1f, 3f));
-            if (i < 25)
-                Dust.NewDustPerfect(Projectile.Center, DustID.Torch, Main.rand.NextVector2Unit() * Main.rand.NextFloat(4f), 0, default, Main.rand.NextFloat(2f));
+            if (i < 35) {
+                var dust = Dust.NewDustPerfect(Projectile.Center, DustID.Torch, Main.rand.NextVector2Unit() * Main.rand.NextFloat(4f), 0, default, Main.rand.NextFloat(2f));
+                if (Main.rand.NextBool(4)) {
+                    dust.noGravity = true;
+                    dust.scale = 4f;
+                    dust.fadeIn = 1.5f;
+                }
+            }
             if (i < 5)
-                Gore.NewGore(Projectile.GetSource_Death(), Projectile.Center, Main.rand.NextVector2Unit(), GoreID.Smoke1, Main.rand.NextFloat(.5f, 1f));
+                Gore.NewGoreDirect(Projectile.GetSource_Death(), Projectile.Center, Main.rand.NextVector2Unit(), GoreID.Smoke1, Main.rand.NextFloat(.5f, 1.5f)).alpha = 150;
         }
         var center = Projectile.Center;
-        Projectile.width = Projectile.height = 100;
+        Projectile.width = Projectile.height = explosionSize;
         Projectile.Center = center;
         Projectile.Damage();
     }
+
+    public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers) => modifiers.FinalDamage *= 1f + (1f - (target.Distance(Projectile.Center) / explosionSize));
+
+    public override void ModifyHitPlayer(Player target, ref Player.HurtModifiers modifiers) => modifiers.FinalDamage *= 1f + (1f - (target.Distance(Projectile.Center) / explosionSize));
 
     public override bool ShouldUpdatePosition() => released;
 

@@ -26,7 +26,7 @@ public class Shuriken : VanillaItem {
 }
 
 public class ShurikenHeld : ChroniclesProjectile {
-    public readonly int numShots = 5;
+    public readonly int numShots = 4;
     public bool released = false;
 
     public int Charge {
@@ -34,7 +34,7 @@ public class ShurikenHeld : ChroniclesProjectile {
         set => Projectile.ai[0] = value;
     }
 
-    public int ChargeMax => (int)(Player.itemTimeMax * 3.5f);
+    public int ChargeMax => (int)(Player.itemTimeMax * 3f);
 
     public Player Player => Main.player[Projectile.owner];
 
@@ -62,26 +62,28 @@ public class ShurikenHeld : ChroniclesProjectile {
             Player.ChangeDir(Math.Sign(Projectile.velocity.X));
 
             Player.heldProj = Projectile.whoAmI;
-            Player.itemAnimation = Player.itemTime = timePerThrow * (int)((float)Charge / ChargeMax * 5);
-            Projectile.Center = Player.Center - (Vector2.Normalize(Projectile.velocity) * 20);
+            Player.itemAnimation = Player.itemTime = timePerThrow * ((int)((float)Charge / ChargeMax * numShots) + 1);
+            Projectile.rotation = Projectile.velocity.ToRotation();
+            Projectile.Center = Player.Center - (Vector2.Normalize(Projectile.velocity) * 16);
             Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, -1.57f + Player.AngleTo(Projectile.Center));
 
-            if ((Charge + 1) % (ChargeMax / numShots) == 0)
-                SoundEngine.PlaySound(SoundID.MaxMana);
             Charge = Math.Min(Charge + 1, ChargeMax);
         }
         else {
             Projectile.Center = Player.Center + (Vector2.Normalize(Projectile.velocity) * 10);
             Projectile.alpha = 255;
 
-            if (((Player.itemAnimation + 1) % timePerThrow) == 0 && Player.whoAmI == Main.myPlayer) {
-                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity, ProjectileID.Shuriken, Projectile.damage, Projectile.knockBack, Player.whoAmI);
+            if (((Player.itemAnimation + 1) % timePerThrow) == 0) {
+                if (Player.whoAmI == Main.myPlayer)
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity, ProjectileID.Shuriken, Projectile.damage, Projectile.knockBack, Player.whoAmI);
 
-                for (var i = 0; i < 8; i++) {
-                    var vel = (Projectile.velocity * Main.rand.NextFloat()).RotatedByRandom(.1f);
-                    Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, Main.rand.NextBool() ? DustID.SilverFlame : DustID.Smoke, vel.X, vel.Y, 180, default, Main.rand.NextFloat(.25f, 1.2f)).noGravity = true;
+                for (var i = 0; i < 10; i++) {
+                    var vel = (Projectile.velocity * Main.rand.NextFloat(.5f, 1.5f)).RotatedByRandom(.1f);
+                    Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, Main.rand.NextBool() ? DustID.SilverFlame : DustID.Smoke, vel.X, vel.Y, 180, default, Main.rand.NextFloat(.25f, 1.4f)).noGravity = true;
                 }
+                SoundEngine.PlaySound(SoundID.Item1);
             }
+            Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, -1.57f + Projectile.velocity.ToRotation() - (Player.itemAnimation % timePerThrow) * .5f * Projectile.direction);
         }
         if (((Player.itemAnimation > 2) || !released) && Player.active && !Player.dead)
             Projectile.timeLeft = 2;
@@ -97,17 +99,19 @@ public class ShurikenHeld : ChroniclesProjectile {
         var texture = TextureAssets.Projectile[Type].Value;
         Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition + new Vector2(0, Projectile.gfxOffY), null,
             Projectile.GetAlpha(lightColor), Projectile.rotation, texture.Size() / 2, Projectile.scale, SpriteEffects.None, 0);
-        DrawSparkle();
 
+        if (Charge < ChargeMax)
+            DrawSparkle();
         return false;
     }
 
     public void DrawSparkle() {
         var texture = TextureAssets.Projectile[79].Value;
-        var scalar = 1f - (Charge % (ChargeMax / numShots)) * .4f;
-        var pos = Projectile.Center;
+        var scalar = Math.Max(1f - (Charge % (ChargeMax / numShots)) * .2f, 0) * .5f;
+        var rotation = (float)Main.timeForVisualEffects / 30f;
 
-        Main.EntitySpriteDraw(texture, pos - Main.screenPosition + new Vector2(0, Projectile.gfxOffY), null, Color.White with { A = 0 }, 0, texture.Size() / 2, scalar * .1f, SpriteEffects.None, 0);
+        Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition + new Vector2(0, Projectile.gfxOffY), null, 
+            Projectile.GetAlpha(Color.White with { A = 0 }), rotation, texture.Size() / 2, scalar, SpriteEffects.None, 0);
     }
 }
 
