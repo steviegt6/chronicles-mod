@@ -24,6 +24,4 @@ public class LeadCrossbow : IronCrossbow {
     }
 }
 
-public class LeadCrossbowProj : IronCrossbowProj {
-    protected override int ParentItem => ModContent.ItemType<LeadCrossbow>();
-}
+public class LeadCrossbowProj : IronCrossbowProj { }
