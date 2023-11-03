@@ -65,8 +65,9 @@ public class ShurikenHeld : ChroniclesProjectile {
             Player.itemAnimation = Player.itemTime = timePerThrow * ((int)((float)Charge / ChargeMax * numShots) + 1);
             Projectile.rotation = Projectile.velocity.ToRotation();
             Projectile.Center = Player.Center - (Vector2.Normalize(Projectile.velocity) * 16);
-            Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, -1.57f + Player.AngleTo(Projectile.Center));
 
+            Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, -1.57f + Player.AngleTo(Projectile.Center));
+            Player.SetCompositeArmBack(true, Player.CompositeArmStretchAmount.Quarter, -1.57f + Projectile.velocity.ToRotation());
             Charge = Math.Min(Charge + 1, ChargeMax);
         }
         else {

@@ -17,6 +17,7 @@ public class Molotov : VanillaItem {
         item.channel = true;
         item.useStyle = ItemUseStyleID.Swing;
         item.useTime = item.useAnimation = 14;
+        item.UseSound = null;
         item.shootSpeed = 10f;
         item.shoot = ModContent.ProjectileType<MolotovProj>();
     }
@@ -54,6 +55,7 @@ public class MolotovProj : ModProjectile {
         if (!released) {
             if (!Player.channel) {
                 released = true;
+                SoundEngine.PlaySound(SoundID.Item1, Projectile.Center);
                 Projectile.tileCollide = true;
             }
             if (Player.whoAmI == Main.myPlayer) {
@@ -62,12 +64,13 @@ public class MolotovProj : ModProjectile {
             }
             Player.ChangeDir(Math.Sign(Projectile.velocity.X));
 
-            Projectile.rotation = Projectile.velocity.ToRotation() + ((Projectile.direction == -1) ? MathHelper.Pi : 0);
-            Projectile.Center = Player.Center + (Vector2.Normalize(Projectile.velocity) * 10);
             Player.heldProj = Projectile.whoAmI;
             Player.itemAnimation = Player.itemTime = Player.itemTimeMax;
+            Projectile.rotation = Projectile.velocity.ToRotation() + ((Projectile.direction == -1) ? MathHelper.Pi : 0);
+            Projectile.Center = Player.Center - (Vector2.Normalize(Projectile.velocity) * 16);
 
-            Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, -1.57f + Projectile.velocity.ToRotation());
+            Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, -1.57f + Player.AngleTo(Projectile.Center));
+            Player.SetCompositeArmBack(true, Player.CompositeArmStretchAmount.Quarter, -1.57f + Projectile.velocity.ToRotation());
         }
         else {
             Projectile.rotation += Projectile.velocity.X / 15;
@@ -84,7 +87,6 @@ public class MolotovProj : ModProjectile {
 
     public override void OnKill(int timeLeft) {
         SoundEngine.PlaySound(SoundID.Item50 with { Pitch = .5f }, Projectile.Center);
-        SoundEngine.PlaySound(SoundID.Item20, Projectile.Center);
         SoundEngine.PlaySound(SoundID.Item76, Projectile.Center);
 
         for (var i = 0; i < 40; i++) {

@@ -18,6 +18,7 @@ public class Grenade : VanillaItem {
         item.UseSound = null;
         item.useStyle = ItemUseStyleID.Swing;
         item.useTime = item.useAnimation = 12;
+        item.UseSound = null;
         item.shootSpeed = 10f;
         item.shoot = ModContent.ProjectileType<GrenadeProj>();
     }
@@ -40,29 +41,32 @@ public class GrenadeProj : ModProjectile {
         Projectile.penetrate = -1;
         Projectile.friendly = Projectile.hostile = true;
         Projectile.DamageType = DamageClass.Ranged;
+        Projectile.tileCollide = false;
     }
 
     public override void AI() {
         if (++Counter >= MaxCounter)
             Projectile.Kill();
-        if (Counter > (MaxCounter - 12))
-            Projectile.velocity *= .92f;
 
         if (!released) {
-            if (!Player.channel)
+            if (!Player.channel) {
                 released = true;
+                SoundEngine.PlaySound(SoundID.Item1, Projectile.Center);
+                Projectile.tileCollide = true;
+            }
             if (Player.whoAmI == Main.myPlayer) {
                 Projectile.velocity = (Vector2.UnitX * Projectile.velocity.Length()).RotatedBy(Player.AngleTo(Main.MouseWorld));
                 Projectile.netUpdate = true;
             }
             Player.ChangeDir(Math.Sign(Projectile.velocity.X));
 
-            Projectile.rotation = Projectile.velocity.ToRotation() + ((Projectile.direction == -1) ? MathHelper.Pi : 0);
-            Projectile.Center = Player.Center + (Vector2.Normalize(Projectile.velocity) * 10);
             Player.heldProj = Projectile.whoAmI;
             Player.itemAnimation = Player.itemTime = Player.itemTimeMax;
+            Projectile.rotation = Projectile.velocity.ToRotation() + ((Projectile.direction == -1) ? MathHelper.Pi : 0);
+            Projectile.Center = Player.Center - (Vector2.Normalize(Projectile.velocity) * 16);
 
-            Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, -1.57f + Projectile.velocity.ToRotation());
+            Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, -1.57f + Player.AngleTo(Projectile.Center));
+            Player.SetCompositeArmBack(true, Player.CompositeArmStretchAmount.Quarter, -1.57f + Projectile.velocity.ToRotation());
         }
         else {
             Projectile.rotation += Projectile.velocity.X / 15;
@@ -97,9 +101,9 @@ public class GrenadeProj : ModProjectile {
         Projectile.Damage();
     }
 
-    public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers) => modifiers.FinalDamage *= 1f + (1f - (target.Distance(Projectile.Center) / explosionSize));
+    public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers) => modifiers.FinalDamage *= 1f + (1f - ((float)target.Distance(Projectile.Center) / explosionSize));
 
-    public override void ModifyHitPlayer(Player target, ref Player.HurtModifiers modifiers) => modifiers.FinalDamage *= 1f + (1f - (target.Distance(Projectile.Center) / explosionSize));
+    public override void ModifyHitPlayer(Player target, ref Player.HurtModifiers modifiers) => modifiers.FinalDamage *= 1f + (1f - ((float)target.Distance(Projectile.Center) / explosionSize));
 
     public override bool ShouldUpdatePosition() => released;
 
