@@ -31,6 +31,13 @@ public class SilverRanseur : ChroniclesItem {
 
     public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         => velocity = velocity.RotatedByRandom(.5f);
+
+    public override void AddRecipes() {
+        var modRecipe = CreateRecipe();
+        modRecipe.AddIngredient(ItemID.SilverBar, 12);
+        modRecipe.AddTile(TileID.Anvils);
+        modRecipe.Register();
+    }
 }
 
 public class SilverRanseurProj : ChroniclesProjectile {

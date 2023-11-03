@@ -35,6 +35,14 @@ public class WoodenShortbow : ChroniclesItem {
         Projectile.NewProjectile(source, position, velocity, Item.shoot, damage, knockback, player.whoAmI, type);
         return false;
     }
+
+    public override void AddRecipes() {
+        var modRecipe = CreateRecipe();
+        modRecipe.AddIngredient(ItemID.Wood, 20);
+        modRecipe.AddIngredient(ItemID.WhiteString);
+        modRecipe.AddTile(TileID.WorkBenches);
+        modRecipe.Register();
+    }
 }
 
 public class WoodenShortbowProj : ChroniclesProjectile {

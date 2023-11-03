@@ -22,6 +22,13 @@ public class TungstenSpear : SilverRanseur {
         Item.rare = ItemRarityID.Green;
         Item.UseSound = SoundID.Item1;
     }
+
+    public override void AddRecipes() {
+        var modRecipe = CreateRecipe();
+        modRecipe.AddIngredient(ItemID.TungstenBar, 12);
+        modRecipe.AddTile(TileID.Anvils);
+        modRecipe.Register();
+    }
 }
 
 public class TungstenSpearProj : SilverRanseurProj {

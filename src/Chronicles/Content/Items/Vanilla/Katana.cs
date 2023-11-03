@@ -1,4 +1,3 @@
-using Chronicles.Content.Items.Weapons.Melee;
 using Chronicles.Core.ModLoader;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -139,10 +138,8 @@ public class KatanaProj : ChroniclesProjectile {
                 dust.noLightEmittence = true;
             }
         }
-        else if (SwingCounter == 6) {
-            Player.GetModPlayer<KatanaPlayer>().freeDodge = false;
+        else if (SwingCounter == 6)
             Player.velocity *= .05f;
-        }
 
         Projectile.Center = Player.Center + (Vector2.Normalize(Projectile.velocity) * (float)((holdoutDistance - SwingCounter / 2) * Projectile.scale));
         Projectile.rotation = Player.AngleTo(Projectile.Center);
@@ -226,6 +223,8 @@ public class KatanaPlayer : ModPlayer {
     public bool freeDodge;
 
     public override void ResetEffects() => cooldown = Math.Max(cooldown - 1, 0);
+
+    public override void PostUpdate() => freeDodge = false;
 
     public override bool FreeDodge(Player.HurtInfo info) => freeDodge;
 }

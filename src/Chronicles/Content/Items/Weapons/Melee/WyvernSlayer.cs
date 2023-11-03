@@ -113,7 +113,7 @@ public class WyvernSlayerProj : GoldenGreatswordProj {
 
         if (Charge >= MaxCharge && target.knockBackResist > 0f) {
             //Attach this projectile to target, which handles launch logic
-            Projectile.NewProjectile(target.GetSource_OnHurt(Projectile), target.Center, Vector2.Zero, ModContent.ProjectileType<Fling>(), Projectile.damage * 2, 0, Player.whoAmI, target.whoAmI, target.rotation);
+            Projectile.NewProjectile(target.GetSource_OnHurt(Projectile), target.Center, Vector2.Zero, ModContent.ProjectileType<Fling>(), (int)(Projectile.damage * .5f), 0, Player.whoAmI, target.whoAmI, target.rotation);
             target.velocity *= 2f;
 
             for (var i = 0; i < 25; i++)

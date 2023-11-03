@@ -31,6 +31,13 @@ public class WoodenStaff : ChroniclesItem {
 
     public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         => player.ownedProjectileCounts[Item.shoot] < 1;
+
+    public override void AddRecipes() {
+        var modRecipe = CreateRecipe();
+        modRecipe.AddIngredient(ItemID.Wood, 25);
+        modRecipe.AddTile(TileID.WorkBenches);
+        modRecipe.Register();
+    }
 }
 
 public class WoodenStaffProj : ChroniclesProjectile {
