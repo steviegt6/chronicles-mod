@@ -117,12 +117,56 @@ public class ShurikenHeld : ChroniclesProjectile {
 }
 
 public class ShurikenProj : VanillaProjectile {
+    private bool collided = false;
+
     public override object ProjectileTypes => ProjectileID.Shuriken;
 
     public override void SetDefaults(Projectile projectile) => projectile.extraUpdates = 1;
 
     public override bool PreAI(Projectile projectile) {
-        projectile.rotation += .1f * projectile.direction;
+        projectile.ai[0] = Math.Min(projectile.ai[0] + (1 / 15f), 1f);
+        if (!collided)
+            projectile.rotation += .2f * projectile.direction;
+        else {
+            if (projectile.scale > 1f)
+                projectile.scale = Math.Max(projectile.scale - .1f, 1f);
+
+            var fadeTime = 15;
+            if (projectile.timeLeft <= fadeTime)
+                projectile.alpha += 255 / fadeTime;
+        }
+
         return false;
+    }
+
+    public override bool OnTileCollide(Projectile projectile, Vector2 oldVelocity) {
+        if (!collided) {
+            collided = true;
+
+            projectile.position += projectile.velocity;
+            projectile.velocity = Vector2.Zero;
+            projectile.timeLeft = 180;
+            projectile.scale = 1.75f;
+
+            Collision.HitTiles(projectile.Center, projectile.velocity, 16, 16);
+            SoundEngine.PlaySound(SoundID.Dig, projectile.Center);
+        }
+        return false;
+    }
+
+    public override bool PreKill(Projectile projectile, int timeLeft) => timeLeft > 0;
+
+    public override bool? CanDamage(Projectile projectile) => !collided ? null : false;
+
+    public override bool? CanCutTiles(Projectile projectile) => !collided;
+
+    public override bool PreDrawExtras(Projectile projectile) {
+        if (!collided) {
+            Main.instance.LoadProjectile(607);
+            var texture = TextureAssets.Projectile[607].Value;
+            var scale = new Vector2(1f - projectile.ai[0], 1f) * projectile.scale * .75f;
+            Main.EntitySpriteDraw(texture, projectile.Center - Main.screenPosition, null, Color.Gray with { A = 0 } * .5f, projectile.velocity.ToRotation() - 1.57f, new Vector2(texture.Width / 2, texture.Height), scale, SpriteEffects.None);
+        }
+        return true;
     }
 }
