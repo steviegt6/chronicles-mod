@@ -193,6 +193,7 @@ public class KatanaProj : ChroniclesProjectile {
     }
 
     public virtual void DrawSmear() {
+        Main.instance.LoadProjectile(985);
         var texture = TextureAssets.Projectile[985].Value;
         var motionUnit = MathHelper.Max(((float)Player.itemAnimation / Player.itemAnimationMax) - .7f, 0);
         var frame = texture.Frame(1, 4, 0, 3 - (int)(motionUnit * 8f));
