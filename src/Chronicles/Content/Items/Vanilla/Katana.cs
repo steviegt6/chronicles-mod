@@ -61,6 +61,8 @@ public class KatanaProj : ChroniclesProjectile {
 
     public int SwingRange => (int)(140 * ((Combo * .4f) + 1));
 
+    public int LungeTime => (int)(Player.itemAnimationMax / 1.5f);
+
     public Player Player => Main.player[Projectile.owner];
 
     public override string Texture => "Terraria/Images/Item_2273";
@@ -122,12 +124,13 @@ public class KatanaProj : ChroniclesProjectile {
     }
 
     private void LungeAI() {
-        if (Projectile.numUpdates == 0 && ++SwingCounter < 6) {
+        if (Projectile.numUpdates == 0 && ++SwingCounter < LungeTime) {
             if (SwingCounter == 1)
                 SoundEngine.PlaySound(SoundID.DD2_WyvernDiveDown, Projectile.Center);
 
             Player.GetModPlayer<KatanaPlayer>().freeDodge = true;
-            Player.velocity = Vector2.Normalize(Projectile.velocity) * 45;
+            var velocity = Vector2.Normalize(Projectile.velocity) * 7f * (SwingCounter / LungeTime);
+            Player.velocity += velocity with { Y = velocity.Y * .5f }; //Halve vertical momentum
             var endPos = Player.Center + Player.velocity;
 
             for (var i = 0; i < (int)(Player.Center.Distance(endPos) / 5); i++) {
@@ -138,10 +141,11 @@ public class KatanaProj : ChroniclesProjectile {
                 dust.noLightEmittence = true;
             }
         }
-        else if (SwingCounter == 6)
-            Player.velocity *= .05f;
+        if (SwingCounter == LungeTime)
+            Player.velocity *= .1f;
 
-        Projectile.Center = Player.Center + (Vector2.Normalize(Projectile.velocity) * (float)((holdoutDistance - SwingCounter / 2) * Projectile.scale));
+        var distance = holdoutDistance * Math.Min(SwingCounter / (LungeTime / 3), 1f);
+        Projectile.Center = Player.Center + (Vector2.Normalize(Projectile.velocity) * (float)(distance * Projectile.scale));
         Projectile.rotation = Player.AngleTo(Projectile.Center);
 
         Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, -1.57f + Projectile.rotation);
@@ -159,11 +163,13 @@ public class KatanaProj : ChroniclesProjectile {
 
     public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone) {
         if (Combo == LUNGE) {
-            SoundEngine.PlaySound(SoundID.NPCHit25 with { Pitch = 1f }, target.Center);
             if (target.life <= 0) {
                 Player.GetModPlayer<KatanaPlayer>().cooldown = 15;
                 SoundEngine.PlaySound(SoundID.NPCDeath11, target.Center);
             }
+
+            SoundEngine.PlaySound(SoundID.NPCHit25 with { Pitch = 1f }, target.Center);
+            SwingCounter = Math.Max(LungeTime, SwingCounter);
         }
     }
 
@@ -223,7 +229,15 @@ public class KatanaPlayer : ModPlayer {
     public int cooldown;
     public bool freeDodge;
 
-    public override void ResetEffects() => cooldown = Math.Max(cooldown - 1, 0);
+    public override void ResetEffects() {
+        if ((cooldown - 1) == 0 && Player.whoAmI == Main.myPlayer) {
+            SoundEngine.PlaySound(SoundID.MaxMana, Player.Center);
+            for (var i = 0; i < 5; i++)
+                Dust.NewDustPerfect(Player.Center + new Vector2(2 * Player.direction, 8 * -Player.gravDir), DustID.SilverFlame, Scale: 1.2f).noGravity = true;
+        } //Cause a visual queue for the local player
+
+        cooldown = Math.Max(cooldown - 1, 0);
+    }
 
     public override void PostUpdate() => freeDodge = false;
 
